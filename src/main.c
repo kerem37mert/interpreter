@@ -1,8 +1,11 @@
 #include "stdio.h"
+#include "locale.h"
 
-int main() {
+int main(int argc, char* argv[]) {
 
-    printf("Hello Worlds");
+    setlocale(LC_ALL, "Turkish");
+
+    printf("şğı");
 
     return 0;
 }
