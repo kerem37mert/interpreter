@@ -84,8 +84,11 @@ Token Lexer::scanToken() {
                 return this->makeToken(TokenType::BANG_EQUAL);
             return this->makeToken(TokenType::BANG);
         case '=':
+            if(this->isMatch('>'))
+                return this->makeToken(TokenType::ARROW);
+            if(this->isMatch('='))
+                return this->makeToken(TokenType::EQUAL_EQUAL);
             return this->makeToken(TokenType::EQUAL);
-        // && || yapılacak
         case '&':
             if(this->isMatch('&'))
                 return this->makeToken(TokenType::AND);

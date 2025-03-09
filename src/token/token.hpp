@@ -45,7 +45,7 @@ enum class TokenType {
     PLUS_PLUS,                    // ++
     MINUS_MINUS,                  // --
     POWER,                        // **
-    COLON_COLON,                   // ::
+    COLON_COLON,                  // ::
     AND,                          // &&
     OR,                           // ||
     ARROW,                        // =>
