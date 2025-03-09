@@ -6,10 +6,15 @@
 
 class Parser {
     public:
-        Parser(std::vector<Token>& tokens);
+        explicit Parser(std::vector<Token>& tokens);
 
     private:
         std::vector<Token>& tokens;
+        unsigned int currentPosition;
+
+        Token& advance();
+        Token& peek();
+        Token& nextPeek();
 };
 
 
