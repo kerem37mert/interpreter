@@ -10,7 +10,7 @@ cmake --build .
 ./interpreter fileName
 ```
 
-or
+veya
 
 ```bash 
 cd build
