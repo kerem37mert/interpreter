@@ -6,4 +6,14 @@ fonk topla:sayı => sayi1:sayı, sayi2:sayı {
     dön sayi1 + sayi2
 }
 
-yaz topla(5+4)
+yaz topla(5.8+4)
+
+deg a = 0
+döngü a < 10 {
+    yaz a
+    a += 1
+}
+
+deg sayıDizisi: sayı[] = [5,6,7,8,9]
+
+sayi 
