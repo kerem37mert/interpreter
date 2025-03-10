@@ -1,3 +1,9 @@
 deg sayi: number = 10
 
-const name: metin =  "ÜĞÜ İÇİ"
+sbt name: metin =  "ÜĞÜ İÇİ"
+
+fonk topla:sayı => sayi1:sayı, sayi2:sayı {
+    dön sayi1 + sayi2
+}
+
+yaz topla(5+4)

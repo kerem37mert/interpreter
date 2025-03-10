@@ -138,7 +138,7 @@ Token Lexer::identifierLiteral(char start) {
 
     if(lexemeStr == "metin")
         return this->makeToken(TokenType::TYPE_STRING);
-    if(lexemeStr == "sayi")
+    if(lexemeStr == "sayı")
         return this->makeToken(TokenType::TYPE_NUMBER);
     if(lexemeStr == "doğruluk")
         return this->makeToken(TokenType::TYPE_BOOL);

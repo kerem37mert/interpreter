@@ -53,7 +53,7 @@ enum class TokenType {
 
     // Keywords
     TYPE_STRING,                  // metin
-    TYPE_NUMBER,                  // sayi
+    TYPE_NUMBER,                  // sayı
     TYPE_BOOL,                    // doğruluk
 
     TRUE,                         // doğru
