@@ -15,6 +15,8 @@ class Parser {
         Token& advance();
         Token& peek();
         Token& nextPeek();
+
+        bool isMatch(TokenType type);
 };
 
 
