@@ -16,5 +16,10 @@ Token& Parser::nextPeek() {
 }
 
 bool Parser::isMatch(TokenType type) {
-    return this->tokens[this->currentPosition].type == type;
+    if(this->tokens[this->currentPosition].type == type) {
+        this->currentToken++;
+        return true;
+    }
+
+    return false;
 }
