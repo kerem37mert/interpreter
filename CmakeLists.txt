@@ -16,6 +16,8 @@ set(SOURCES
     src/lexer/lexer.cpp
     src/parser/parser.cpp
     src/parser/parser.hpp
+    src/ast/ast.cpp
+    src/ast/ast.hpp
 )
 
 add_executable(interpreter ${SOURCES})
