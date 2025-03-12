@@ -1,4 +1,4 @@
-deg sayi: number = 10
+deg sayi1: sayi = 10
 
 sbt name: metin =  "ÜĞÜ İÇİ"
 
