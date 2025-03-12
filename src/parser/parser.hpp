@@ -5,18 +5,18 @@
 #include "../token/token.hpp"
 
 class Parser {
-    public:
-        explicit Parser(std::vector<Token>& tokens);
+public:
+    explicit Parser(std::vector<Token>& tokens);
 
-    private:
-        std::vector<Token>& tokens;
-        unsigned int currentPosition;
+private:
+    std::vector<Token>& tokens;
+    unsigned int currentPosition;
 
-        Token& advance();
-        Token& peek();
-        Token& nextPeek();
+    Token& advance();
+    Token& peek();
+    Token& nextPeek();
 
-        bool isMatch(TokenType type);
+    bool isMatch(TokenType type);
 };
 
 

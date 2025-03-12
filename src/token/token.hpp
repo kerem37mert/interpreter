@@ -73,15 +73,15 @@ enum class TokenType {
 };
 
 class Token {
-    public:
-        const TokenType type;
-        const std::string fileName;
-        const char* start;
-        const unsigned int length;
-        const unsigned int line;
-        const unsigned int column;
+public:
+    const TokenType type;
+    const std::string fileName;
+    const char* start;
+    const unsigned int length;
+    const unsigned int line;
+    const unsigned int column;
 
-        Token(TokenType type, const std::string& fileName, const char* start, unsigned int length, unsigned int line, unsigned int column);
+    Token(TokenType type, const std::string& fileName, const char* start, unsigned int length, unsigned int line, unsigned int column);
 };
 
 #endif // TOKEN_HPP

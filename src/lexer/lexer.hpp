@@ -6,35 +6,35 @@
 #include "../token/token.hpp"
 
 class Lexer {
-    public:
-        Lexer(const std::string& source, const std::string& fileName);
-        std::vector<Token> scanner();
+public:
+    Lexer(const std::string& source, const std::string& fileName);
+    std::vector<Token> scanner();
 
-    private:
-        const std::string& source;
-        const std::string& fileName;
-        unsigned int startPosition;
-        unsigned int currentPosition;
-        unsigned int currentLine;
-        unsigned int currentColumn;
+private:
+    const std::string& source;
+    const std::string& fileName;
+    unsigned int startPosition;
+    unsigned int currentPosition;
+    unsigned int currentLine;
+    unsigned int currentColumn;
 
-        Token scanToken();
-        Token makeToken(TokenType type);
-        Token errorToken(const char* errMsg);
-        Token stringLiteral();
-        Token identifierLiteral(char start);
-        Token numberLiteral();
+    Token scanToken();
+    Token makeToken(TokenType type);
+    Token errorToken(const char* errMsg);
+    Token stringLiteral();
+    Token identifierLiteral(char start);
+    Token numberLiteral();
 
-        void skipWhiteSpace();
-        
-        char advance();
-        char peek();
-        char nextPeek();
-        bool isMatch(char c);
+    void skipWhiteSpace();
 
-        bool isAtEnd();
-        bool isAlpha(char c);
-        bool isDigit(char c);
+    char advance();
+    char peek();
+    char nextPeek();
+    bool isMatch(char c);
+
+    bool isAtEnd();
+    bool isAlpha(char c);
+    bool isDigit(char c);
 };
 
 #endif // LEXER_HPP
