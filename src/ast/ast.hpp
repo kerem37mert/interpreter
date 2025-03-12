@@ -35,5 +35,11 @@ public:
     UnaryExpression(Token& op, std::unique_ptr<Expression> right);
 };
 
+class ExpressionLiteral : public Expression {
+public:
+    Token& token;
+
+    explicit ExpressionLiteral(Token& token);
+};
 
 #endif //AST_H
