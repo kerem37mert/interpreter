@@ -20,6 +20,4 @@ private:
     bool isMatch(TokenType type);
 };
 
-
-
 #endif //PARSER_H

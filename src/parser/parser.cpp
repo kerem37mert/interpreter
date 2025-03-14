@@ -3,6 +3,10 @@
 Parser::Parser(std::vector<Token>& tokens)
     :tokens(tokens), currentPosition(0) {}
 
+void Parser::parse() {
+    // return type değiştirilecek fonkun içi doldurulacak
+}
+
 Token& Parser::advance() {
     return this->tokens[this->currentPosition++];
 }

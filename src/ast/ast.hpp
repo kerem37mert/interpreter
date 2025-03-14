@@ -24,7 +24,6 @@ public:
     std::unique_ptr<Expression> right;
 
     BinaryExpression(Token& op, std::unique_ptr<Expression> left, std::unique_ptr<Expression> right);
-
 };
 
 class UnaryExpression : public Expression {
