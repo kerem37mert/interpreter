@@ -35,8 +35,8 @@
 ```
 
 ## Döngüler 
-```interpereter (Dil için bir isin oluşturulacak)
-   döngü <koşul_ifadei> {
+```interpereter (Dil için bir isim oluşturulacak)
+   döngü <koşul_ifadesi> {
     // ifadeler
    }
 ```

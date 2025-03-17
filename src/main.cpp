@@ -31,7 +31,10 @@ void run(const char* filePath) {
 
 int main(int argc, char* argv[]) {
 
-    system("chcp 65001"); // Windows terminal Türkçe desteği için
+    #ifdef _WIN32
+        system("chcp 65001"); // Windows terminal Türkçe desteği için
+    #endif
+
     setlocale(LC_ALL, "tr_TR.UTF-8");
 
     if(argc != 2) {
@@ -45,3 +48,4 @@ int main(int argc, char* argv[]) {
 }
 
 // Todo: Lexer'da String Literal için kaçış karakterleri eklenecek.
+// Todo: Deterministik top-down algoritması araştırılacak.
