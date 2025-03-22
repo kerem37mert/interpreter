@@ -12,7 +12,6 @@ cmake --build .
 
 veya
 
-## Çalıştır
 
 ```bash 
 cd build
