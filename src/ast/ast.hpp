@@ -115,4 +115,114 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
+class ExpressionStmt : public Stmt {
+public:
+    std::unique_ptr<Expression> expression;
+
+    explicit ExpressionStmt(std::unique_ptr<Expression> expression);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class PrintStmt : public Stmt {
+    std::unique_ptr<Expression> expression;
+
+    explicit PrintStmt(std::unique_ptr<Expression> expression);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class VarDeclStmt : public Stmt {
+public:
+    Token name;
+    Token type;
+    bool isArray;
+    bool isConst;
+
+    std::unique_ptr<Expression> initializer;
+
+    VarDeclStmt(const Token& name, const Token& type, bool isArray, bool isConst,
+        std::unique_ptr<Expression> initializer);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class BlockStmt : public Stmt {
+public:
+    std::vector<std::unique_ptr<Stmt>> statements;
+
+    explicit BlockStmt(std::vector<std::unique_ptr<Stmt>> statements);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class IfStmt : public Stmt {
+public:
+    std::unique_ptr<Expression> condition;
+    std::unique_ptr<BlockStmt> thenBranch;
+    std::unique_ptr<BlockStmt> elseBranch;
+
+    IfStmt(std::unique_ptr<Expression> condition,
+        std::unique_ptr<BlockStmt> thenBranch,
+        std::unique_ptr<BlockStmt> elseBlock);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class LoopStmt : public Stmt {
+    std::unique_ptr<Expression> condition;
+    std::unique_ptr<Stmt> body;
+
+    LoopStmt(std::unique_ptr<Expression> condition, std::unique_ptr<Stmt> body);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class BreakStmt : public Stmt {
+public:
+    Token keyword;
+
+    explicit BreakStmt(const Token& keyword);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class ContinueStmt : public Stmt {
+public:
+    Token keyword;
+
+    explicit ContinueStmt(const Token& keyword);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class FunctionDeclStmt : public Stmt {
+public:
+    Token name;
+    Token returnType;
+    std::vector<Token> paramNames;
+    std::vector<Token> paramTypes;
+    std::unique_ptr<Stmt> body;
+
+    FunctionDeclStmt(const Token& name, const Token& returnType,
+        std::vector<Token> paramNames,
+        std::vector<Token> paramTypes,
+        std::unique_ptr<Stmt> body);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class ReturnStmt : public Stmt {
+public:
+    Token keyword;
+    std::unique_ptr<Expression> value;
+
+    ReturnStmt(const Token& keyword, std::unique_ptr<Expression> value);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class Program : public AstNode {
+    std::vector<std::unique_ptr<Stmt>> statements;
+
+    explicit Program(std::vector<std::unique_ptr<Stmt>> statements);
+    void accept(ASTVisitor& visitor) override;
+};
+
+class ASTVisitor {
+public:
+    virtual ~ASTVisitor() = default;
+
+    virtual void visitBinaryExpression(BinaryExpression* expr) = 0;
+};
 #endif //AST_H
