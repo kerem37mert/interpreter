@@ -65,11 +65,11 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-class VariabelExpression : public Expression {
+class VariableExpression : public Expression {
 public:
     Token name;
 
-    explicit VariabelExpression(const Token& name);
+    explicit VariableExpression(const Token& name);
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -103,14 +103,14 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-class ArrayAccesExpression : public Expression {
+class ArrayAccessExpression : public Expression {
 public:
     std::unique_ptr<Expression> array;
     std::unique_ptr<Expression> index;
     unsigned int line;
     unsigned int column;
 
-    ArrayAccesExpression(std::unique_ptr<Expression> array, std::unique_ptr<Expression> index,
+    ArrayAccessExpression(std::unique_ptr<Expression> array, std::unique_ptr<Expression> index,
         const Token& bracket);
     void accept(ASTVisitor& visitor) override;
 };
@@ -224,5 +224,26 @@ public:
     virtual ~ASTVisitor() = default;
 
     virtual void visitBinaryExpression(BinaryExpression* expr) = 0;
+    virtual void visitLogicalExpression(LogicalExpression* expr) = 0;
+    virtual void visitUnaryExpression(UnaryExpression* expr) = 0;
+    virtual void visitComparisonExpression(ComparisonExpression* expr) = 0;
+    virtual void visitLiteralExpression(LiteralExpression* expr) = 0;
+    virtual void visitVariableExpression(VariableExpression* expr) = 0;
+    virtual void visitAssignExpression(AssignExpression* expr) = 0;
+    virtual void visitCallExpression(CallExpression* expr) = 0;
+    virtual void visitArrayExpression(ArrayExpression* expr) = 0;
+    virtual void visitArrayAccessExpression(ArrayAccessExpression* expr) = 0;
+
+    virtual void visitExpressionStmt(ExpressionStmt* stmt) = 0;
+    virtual void visitPrintStmt(PrintStmt* stmt) = 0;
+    virtual void visitVarDeclStmt(VarDeclStmt* stmt) = 0;
+    virtual void visitBlockStmt(BlockStmt* stmt) = 0;
+    virtual void visitIfStmt(IfStmt* stmt) = 0;
+    virtual void visitLoopStmt(LoopStmt* stmt) = 0;
+    virtual void visitBreakStmt(BreakStmt* stmt) = 0;
+    virtual void visitContinueStmt(ContinueStmt* stmt) = 0;
+    virtual void visitFunctionDeclStmt(FunctionDeclStmt* stmt) = 0;
+    virtual void visitReturnStmt(ReturnStmt* stmt) = 0;
+    virtual void visitProgram(Program* program) = 0;
 };
 #endif //AST_H
