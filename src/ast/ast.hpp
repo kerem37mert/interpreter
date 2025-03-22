@@ -155,12 +155,12 @@ public:
 class IfStmt : public Stmt {
 public:
     std::unique_ptr<Expression> condition;
-    std::unique_ptr<BlockStmt> thenBranch;
-    std::unique_ptr<BlockStmt> elseBranch;
+    std::unique_ptr<Stmt> thenBranch;
+    std::unique_ptr<Stmt> elseBranch;
 
     IfStmt(std::unique_ptr<Expression> condition,
-        std::unique_ptr<BlockStmt> thenBranch,
-        std::unique_ptr<BlockStmt> elseBlock);
+        std::unique_ptr<Stmt> thenBranch,
+        std::unique_ptr<Stmt> elseBlock);
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -191,15 +191,15 @@ public:
 class FunctionDeclStmt : public Stmt {
 public:
     Token name;
-    Token returnType;
+    Token returnType;  // İsteğe bağlı (null olabilir, void fonksiyon için)
     std::vector<Token> paramNames;
     std::vector<Token> paramTypes;
-    std::unique_ptr<Stmt> body;
+    std::unique_ptr<BlockStmt> body;
 
     FunctionDeclStmt(const Token& name, const Token& returnType,
         std::vector<Token> paramNames,
         std::vector<Token> paramTypes,
-        std::unique_ptr<Stmt> body);
+        std::unique_ptr<BlockStmt> body);
     void accept(ASTVisitor& visitor) override;
 };
 

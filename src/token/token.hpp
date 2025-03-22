@@ -67,7 +67,7 @@ enum class TokenType {
     FUNCTION,                     // fonk
     RETURN,                       // dön
     SWITCH,                       // eşle
-    BREAK,                        // kır
+    BREAK,                        // dur
     CONTINUE,                     // devam
     PRINT                         // yaz
 };
