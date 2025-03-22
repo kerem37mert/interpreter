@@ -30,6 +30,7 @@ enum class TokenType {
     DOT,                          // .
     COMMA,                        // ,
     COLON,                        // :
+    SEMI_COLON,                   // ;
     BANG,                         // !
 
     // two chars

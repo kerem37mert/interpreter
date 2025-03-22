@@ -79,6 +79,8 @@ Token Lexer::scanToken() {
             return this->makeToken(TokenType::COMMA);
         case ':':
             return this->makeToken(TokenType::COLON);
+        case ';':
+            return this->makeToken(TokenType::SEMI_COLON);
         case '!':
             if(this->isMatch('='))
                 return this->makeToken(TokenType::BANG_EQUAL);
