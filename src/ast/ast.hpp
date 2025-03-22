@@ -17,8 +17,6 @@ public:
 class Expression : public AstNode {};
 class Stmt : public AstNode {};
 
-// AST KÖK DÜĞÜM
-
 class BinaryExpression : public Expression {
 public:
     Token op;
@@ -48,7 +46,6 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-
 class ComparisonExpression : public Expression {
 public:
     Token op;
@@ -68,11 +65,11 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-class VariableExpression : public Expression {
+class VariabelExpression : public Expression {
 public:
     Token name;
 
-    explicit VariableExpression(const Token& name);
+    explicit VariabelExpression(const Token& name);
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -87,40 +84,35 @@ class AssignExpression : public Expression {
 class CallExpression : public Expression {
 public:
     std::unique_ptr<Expression> callee;
-    int line;
-    int column;
+    unsigned int line;
+    unsigned int column;
     std::vector<std::unique_ptr<Expression>> arguments;
 
     CallExpression(std::unique_ptr<Expression> callee, const Token& paren,
-                   std::vector<std::unique_ptr<Expression>> arguments);
+        std::vector<std::unique_ptr<Expression>> arguments);
     void accept(ASTVisitor& visitor) override;
 };
 
 class ArrayExpression : public Expression {
 public:
     std::vector<std::unique_ptr<Expression>> elements;
-    int line;
-    int column;
+    unsigned int line;
+    unsigned int column;
 
     ArrayExpression(std::vector<std::unique_ptr<Expression>> elements, const Token& bracket);
     void accept(ASTVisitor& visitor) override;
 };
 
-class ArrayAccessExpression : public Expression {
+class ArrayAccesExpression : public Expression {
 public:
     std::unique_ptr<Expression> array;
     std::unique_ptr<Expression> index;
-    int line;
-    int column;
+    unsigned int line;
+    unsigned int column;
 
-    ArrayAccessExpression(std::unique_ptr<Expression> array,
-                         std::unique_ptr<Expression> index,
-                         const Token& bracket);
+    ArrayAccesExpression(std::unique_ptr<Expression> array, std::unique_ptr<Expression> index,
+        const Token& bracket);
     void accept(ASTVisitor& visitor) override;
 };
 
-class ExpressionStmt : public Stmt
-{
-    
-};
 #endif //AST_H
