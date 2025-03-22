@@ -5,8 +5,8 @@
 Parser::Parser(std::vector<Token>& tokens)
     :tokens(tokens), currentPosition(0) {}
 
-std::vector<std::unique_ptr<AstNode>> Parser::parse() {
-    std::vector<std::unique_ptr<AstNode>> head;
+std::vector<std::unique_ptr<Stmt>> Parser::parse() {
+    std::vector<std::unique_ptr<Stmt>> head;
 
     while(this->isMatch(TokenType::TOKEN_EOF))
        this->advance();
@@ -15,31 +15,8 @@ std::vector<std::unique_ptr<AstNode>> Parser::parse() {
 }
 
 
-// Shunting Yard Algoritması Kullanılacak
-// Expresision yoksa nullptr return et
-std::unique_ptr<AstNode> Parser::parseExpression() {
+std::unique_ptr<Expression> Parser::parseExpression() {
 
-    // Yardımcı Vektörler
-    std::vector<Token> stack;
-    std::vector<Token> queue;
-
-    while(this->peek().type != TokenType::TOKEN_EOF) {
-        switch(this->peek().type) {
-            case TokenType::IDENTIFIER:
-                // yazılacak
-                break;
-            case TokenType::NUMBER_LITERAL:
-            case TokenType::STRING_LITERAL:
-            case TokenType::TRUE:
-            case TokenType::FALSE:
-                // yazılacak
-                break;
-            default:
-                return nullptr;
-        }
-
-        return nullptr;
-    }
 }
 
 Token& Parser::advance() {
@@ -52,6 +29,10 @@ Token& Parser::peek() {
 
 Token& Parser::nextPeek() {
     return this->tokens[this->currentPosition + 1];
+}
+
+Token& Parser::consumed(){
+    return this->tokens[this->currentPosition - 1];
 }
 
 bool Parser::isMatch(TokenType type) {

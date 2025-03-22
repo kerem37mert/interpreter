@@ -9,17 +9,27 @@
 class Parser {
 public:
     explicit Parser(std::vector<Token>& tokens);
-    std::vector<std::unique_ptr<AstNode>> parse();
+    std::vector<std::unique_ptr<Stmt>> parse();
 
 private:
     std::vector<Token>& tokens;
     unsigned int currentPosition;
 
-    std::unique_ptr<AstNode> parseExpression();
+    std::unique_ptr<Expression> parseExpression();
+    std::unique_ptr<Expression> asignment();
+    std::unique_ptr<Expression> logicOR();
+    std::unique_ptr<Expression> logicAND();
+    std::unique_ptr<Expression> equality();
+    std::unique_ptr<Expression> comparison();
+    std::unique_ptr<Expression> addition();
+    std::unique_ptr<Expression> multiplication();
+    std::unique_ptr<Expression> call();
+    std::unique_ptr<Expression> primary();
 
     Token& advance();
     Token& peek();
     Token& nextPeek();
+    Token& consumed();
 
     bool isMatch(TokenType type);
 

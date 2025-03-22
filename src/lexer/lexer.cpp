@@ -248,7 +248,8 @@ bool Lexer::isAtEnd() {
 }
 
 bool Lexer::isAlpha(char c) {
-    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' ||
+        std::string("çğıöşüÇĞİÖŞÜ").find(c) != std::string::npos;;
 }
 
 bool Lexer::isDigit(char c) {
