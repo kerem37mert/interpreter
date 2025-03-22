@@ -1,7 +1,7 @@
 # Dilin Sözdiziminde Bulunan Anahtar Kelimeler
 
 - metin
-- sayi 
+- sayı
 - doğruluk
 - doğru
 - yanlış
