@@ -191,7 +191,7 @@ public:
 class FunctionDeclStmt : public Stmt {
 public:
     Token name;
-    Token returnType;  // İsteğe bağlı (null olabilir, void fonksiyon için)
+    Token returnType;
     std::vector<Token> paramNames;
     std::vector<Token> paramTypes;
     std::unique_ptr<BlockStmt> body;
@@ -213,6 +213,7 @@ public:
 };
 
 class Program : public AstNode {
+public:
     std::vector<std::unique_ptr<Stmt>> statements;
 
     explicit Program(std::vector<std::unique_ptr<Stmt>> statements);

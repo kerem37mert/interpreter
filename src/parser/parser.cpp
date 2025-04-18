@@ -4,19 +4,42 @@
 Parser::Parser(const std::vector<Token>& tokens)
     : tokens(tokens), currentToken(0), hasError(false) {}
 
+std::unique_ptr<Program> Parser::parse() {
+    std::vector<std::unique_ptr<Stmt>> statements;
 
-Token Parser::advance(){
+    while(!this->isAtEnd() && !this->hasError) {
+        try {
+            statements.push_back(this->statement());
+        } catch(...) {
+            this->synchronize();
+        }
+    }
+
+    if(this->hasError)
+        return std::make_unique<Program>(std::vector<std::unique_ptr<Stmt>>());
+
+    return std::make_unique<Program>(std::move(statements));
+}
+
+std::unique_ptr<Stmt> Parser::statement() {
+    if(this->match(TokenType::PRINT))
+        ;
+
+    if(this->match(TokenType::IF))
+        ;
+}
+
+
+Token Parser::advance() {
     if(!this->isAtEnd())
         this->currentToken++;
-
     return this->previous();
 }
 
 bool Parser::check(TokenType type) const {
     if(this->isAtEnd())
         return false;
-
-    return this->peek().type == type;
+    return this->peek().type() == type;
 }
 
 bool Parser::match(TokenType type) {
@@ -24,7 +47,6 @@ bool Parser::match(TokenType type) {
         this->advance();
         return true;
     }
-
     return false;
 }
 
@@ -35,7 +57,6 @@ bool Parser::match(const std::initializer_list<TokenType>& types) {
             return true;
         }
     }
-
     return false;
 }
 
@@ -66,7 +87,7 @@ void Parser::synchronize() {
             return;
 
         switch(this->peek().type) {
-            case TokenType::VAR:
+        case TokenType::VAR:
             case TokenType::CONST:
             case TokenType::FUNCTION:
             case TokenType::IF:
@@ -76,14 +97,13 @@ void Parser::synchronize() {
                 return;
             default:
                 break;
-
-            this->advance();
         }
+        this->advance();
     }
 }
 
 void Parser::error(const Token& token, const std::string& message) {
-    this->hasError = true;
+    hasError = true;
 
     std::cerr << "\n\033[1;31m========== SÖZDİZİMİ HATASI ==========\033[0m" << std::endl;
 
@@ -99,5 +119,6 @@ void Parser::error(const Token& token, const std::string& message) {
 
     std::cerr << "\033[1;31m=====================================\033[0m" << std::endl;
 
+    // Hata durumunda bir istisna fırlatarak mevcut işlemi durdur
     throw std::exception();
 }

@@ -45,6 +45,7 @@ private:
     std::unique_ptr<Expression> finishCall(std::unique_ptr<Expression> callee);
     std::unique_ptr<Expression> arrayAccess(std::unique_ptr<Expression> array);
 
+    // Yardımcı metotlar
     Token advance();
     bool check(TokenType type) const;
     bool match(TokenType type);
