@@ -25,8 +25,31 @@ std::unique_ptr<Stmt> Parser::statement() {
     if(this->match(TokenType::PRINT))
         ;
 
+    if(this->match(TokenType::BRACKET_CURLY_LEFT))
+        ;
+
     if(this->match(TokenType::IF))
         ;
+
+    if(this->match(TokenType::LOOP))
+        ;
+
+    if(this->match(TokenType::BREAK))
+        ;
+
+    if(this->match(TokenType::CONTINUE))
+        ;
+
+    if(this->match(TokenType::RETURN))
+        ;
+
+    if(this->match({TokenType::VAR, TokenType::CONST}))
+        ;
+
+    if(this->match(TokenType::FUNCTION))
+        ;
+
+    // Diğer durumlarda expression
 }
 
 
@@ -39,7 +62,7 @@ Token Parser::advance() {
 bool Parser::check(TokenType type) const {
     if(this->isAtEnd())
         return false;
-    return this->peek().type() == type;
+    return this->peek().type == type;
 }
 
 bool Parser::match(TokenType type) {
