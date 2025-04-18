@@ -1,4 +1,6 @@
 #include "parser.hpp"
+
+#include <cmath>
 #include <iostream>
 
 Parser::Parser(const std::vector<Token>& tokens)
@@ -51,6 +53,172 @@ std::unique_ptr<Stmt> Parser::statement() {
 
     // Diğer durumlarda expression
 }
+
+////// EXPRESSION METOTLARI /////
+
+std::unique_ptr<Expression> Parser::expression() {
+    return this->assignment();
+}
+
+std::unique_ptr<Expression> Parser::assignment() {
+}
+
+std::unique_ptr<Expression> Parser::equality() {
+    std::unique_ptr<Expression> expression = this->comparison();
+
+    while(this->match({TokenType::EQUAL_EQUAL, TokenType::BANG_EQUAL})) {
+        Token op = this->previous();
+        std::unique_ptr<Expression> right = this->comparison();
+        expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
+    }
+
+    return expression;
+}
+
+
+std::unique_ptr<Expression> Parser::comparison() {
+    std::unique_ptr<Expression> expression = this->term();
+
+    while(this->match({TokenType::LESS, TokenType::LESS_EQUAL, TokenType::GREAT, TokenType::GREAT_EQUAL})) {
+        Token op = this->previous();
+        std::unique_ptr<Expression> right = this->term();
+        expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
+    }
+
+    return expression;
+}
+
+std::unique_ptr<Expression> Parser::term() {
+    std::unique_ptr<Expression> expression = this->factor();
+
+    while(this->match({TokenType::PLUS, TokenType::MINUS})) {
+        Token op = this->previous();
+        auto right = this->factor();
+        expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
+    }
+
+    return expression;
+}
+
+
+std::unique_ptr<Expression> Parser::factor() {
+    std::unique_ptr<Expression> expression = this->power();
+
+    while(this->match({TokenType::MULTIPLY, TokenType::DIVIDE, TokenType::MODULUS})) {
+        Token op = this->previous();
+        std::unique_ptr<Expression> right = this->power();
+        expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
+    }
+
+    return expression;
+}
+
+std::unique_ptr<Expression> Parser::power() {
+    std::unique_ptr<Expression> expression = this->unary();
+
+    while(this->match(TokenType::POWER)) {
+        Token op = this->previous();
+        std::unique_ptr<Expression> right = this->unary();
+        expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
+    }
+
+    return expression;
+}
+
+std::unique_ptr<Expression> Parser::unary() {
+    if(this->match({TokenType::MINUS, TokenType::BANG})) {
+        Token op = this->previous();
+        std::unique_ptr<Expression> right = this->unary();
+
+        return std::make_unique<UnaryExpression>(op, std::move(right));
+    }
+
+    return this->call();
+}
+
+std::unique_ptr<Expression> Parser::call() {
+    std::unique_ptr<Expression> expression = this->primary();
+
+    while(true) {
+        if(this->match(TokenType::BRACKET_ROUND_LEFT))
+            expression = this->finishCall(std::move(expression));
+        else if (match(TokenType::BRACKET_SQUARE_LEFT))
+            expression = arrayAccess(std::move(expression));
+        else
+            break;
+    }
+
+    return expression;
+}
+
+
+std::unique_ptr<Expression> Parser::finishCall(std::unique_ptr<Expression> callee) {
+    std::vector<std::unique_ptr<Expression>> arguments;
+
+    if(!this->check(TokenType::BRACKET_ROUND_RIGHT)) {
+        do {
+            arguments.push_back(expression());
+        } while(this->match(TokenType::COMMA));
+    }
+
+    Token paren = consume(TokenType::BRACKET_ROUND_RIGHT, "Fonksiyon çağrısı sonunda ')' bekleniyor.");
+
+    return std::make_unique<CallExpression>(std::move(callee), paren, std::move(arguments));
+}
+
+
+
+std::unique_ptr<Expression> Parser::arrayAccess(std::unique_ptr<Expression> array) {
+    std::unique_ptr<Expression> index = this->expression();
+    Token bracket = this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi erişiminde ']' bekleniyor.");
+
+    return std::make_unique<ArrayAccessExpression>(std::move(array), std::move(index), bracket);
+}
+
+
+std::unique_ptr<Expression> Parser::arrayExpression() {
+    Token bracket = consume(TokenType::BRACKET_SQUARE_LEFT, "Dizi ifadesinde '[' bekleniyor.");
+    std::vector<std::unique_ptr<Expression>> elements;
+
+    if(!this->check(TokenType::BRACKET_SQUARE_RIGHT)) {
+        do {
+            elements.push_back(this->expression());
+        } while(this->match(TokenType::COMMA));
+
+        consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi ifadesinde ']' bekleniyor.");
+
+        return std::make_unique<ArrayExpression>(std::move(elements), bracket);
+    }
+}
+
+std::unique_ptr<Expression> Parser::primary() {
+    if(this->match(TokenType::STRING_LITERAL))
+        return std::make_unique<LiteralExpression>(this->previous());
+
+    if(this->match(TokenType::NUMBER_LITERAL))
+        return std::make_unique<LiteralExpression>(this->previous());
+
+    if(this->match({TokenType::TRUE, TokenType::FALSE}))
+        return std::make_unique<LiteralExpression>(this->previous());
+
+    if(this->match(TokenType::BRACKET_SQUARE_LEFT))
+        return this->arrayExpression();
+
+    if(this->match(TokenType::IDENTIFIER))
+        return std::make_unique<VariableExpression>(this->previous());
+
+    if (this->match(TokenType::BRACKET_ROUND_LEFT)) {
+        std::unique_ptr<Expression> expression = this->expression();
+        consume(TokenType::BRACKET_ROUND_RIGHT, "İfade sonunda ')' bekleniyor.");
+        return expression;
+    }
+
+    this->error(this->peek(), "ifade bekleniyor.");
+}
+
+
+////// EXPRESSION METOTLARI /////
+
 
 
 Token Parser::advance() {
