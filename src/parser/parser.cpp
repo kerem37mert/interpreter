@@ -61,6 +61,26 @@ std::unique_ptr<Expression> Parser::expression() {
 }
 
 std::unique_ptr<Expression> Parser::assignment() {
+    std::unique_ptr<Expression> expression = this->logicalOr();
+
+    if(this->match(TokenType::EQUAL)) {
+        Token equals = this->previous();
+        std::unique_ptr<Expression> value = this->assignment();
+
+        if (VariableExpression* varExpr = dynamic_cast<VariableExpression*>(expression.get())) {
+            Token name = varExpr->name;
+            return std::make_unique<AssignExpression>(name, std::move(value));
+        }
+
+        if (auto* arrayAccessExpr = dynamic_cast<ArrayAccessExpression*>(expression.get())) {
+            // Dizi elemanı atama işlemi için özel bir AST düğümü oluşturulacak
+            error(equals, "Geçersiz atama hedefi.");
+        }
+
+        error(equals, "Geçersiz atama hedefi.");
+    }
+
+    return expression;
 }
 
 std::unique_ptr<Expression> Parser::logicalOr() {
