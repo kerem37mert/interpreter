@@ -74,6 +74,7 @@ public:
 };
 
 class AssignExpression : public Expression {
+public:
     Token name;
     std::unique_ptr<Expression> value;
 
@@ -124,6 +125,7 @@ public:
 };
 
 class PrintStmt : public Stmt {
+public:
     std::unique_ptr<Expression> expression;
 
     explicit PrintStmt(std::unique_ptr<Expression> expression);
@@ -165,6 +167,7 @@ public:
 };
 
 class LoopStmt : public Stmt {
+public:
     std::unique_ptr<Expression> condition;
     std::unique_ptr<Stmt> body;
 

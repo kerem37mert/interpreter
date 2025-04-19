@@ -253,7 +253,7 @@ std::unique_ptr<Expression> Parser::logicalOr() {
     while(this->match(TokenType::OR)) {
         Token op = this->previous();
         std::unique_ptr<Expression> right = this->logicalAnd();
-        expression = std::make_unique<LogicalExpression>(op, expression, right);
+        expression = std::make_unique<LogicalExpression>(op, std::move(expression), std::move(right));
     }
 
     return expression;
