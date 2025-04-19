@@ -1,6 +1,5 @@
 #include "parser.hpp"
 
-#include <cmath>
 #include <iostream>
 
 Parser::Parser(const std::vector<Token>& tokens)
@@ -54,8 +53,42 @@ std::unique_ptr<Stmt> Parser::statement() {
     // Diğer durumlarda expression
 }
 
-///// EXPRESSION METOTLARI /////
+std::unique_ptr<Stmt> Parser::printStatement() {
+    std::unique_ptr<Expression> value = this->expression(); // Ekrana yazılacak değer
 
+    this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<PrintStmt>(std::move(value));
+}
+
+std::unique_ptr<Stmt> Parser::expressionStatement() {
+    std::unique_ptr<Expression> value = this->expression();
+
+    this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<ExpressionStmt>(std::move(value));
+}
+
+std::unique_ptr<Stmt> Parser::blockStatement() {
+    std::vector<std::unique_ptr<Stmt>> statements;
+
+    while(!this->check(TokenType::BRACKET_CURLY_RIGHT) && !this->isAtEnd())
+        statements.push_back(this->statement());
+
+    consume(TokenType::BRACKET_CURLY_RIGHT, "Blok sonunda '}' bekleniyor.");
+
+    return std::make_unique<BlockStmt>(std::move(statements));
+}
+
+std::unique_ptr<Stmt> Parser::ifStatement() {
+    bool hasParentheses = this->match(TokenType::BRACKET_ROUND_LEFT); // koşul parantezi
+
+    std::unique_ptr<Expression> condition = this->expression();
+
+}
+
+
+///// EXPRESSION METOTLARI /////
 std::unique_ptr<Expression> Parser::expression() {
     return this->assignment();
 }
