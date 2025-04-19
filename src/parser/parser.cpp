@@ -24,33 +24,34 @@ std::unique_ptr<Program> Parser::parse() {
 
 std::unique_ptr<Stmt> Parser::statement() {
     if(this->match(TokenType::PRINT))
-        ;
+        return this->printStatement();
 
     if(this->match(TokenType::BRACKET_CURLY_LEFT))
-        ;
+        return this->blockStatement();
 
     if(this->match(TokenType::IF))
-        ;
+        return this->ifStatement();
 
     if(this->match(TokenType::LOOP))
-        ;
+        return this->loopStatement();
 
     if(this->match(TokenType::BREAK))
-        ;
+        return this->breakStatement();
 
     if(this->match(TokenType::CONTINUE))
-        ;
+        return this->continueStatement();
 
     if(this->match(TokenType::RETURN))
-        ;
+        return this->returnStatement();
 
     if(this->match({TokenType::VAR, TokenType::CONST}))
-        ;
+        return this->varDeclaration();
 
     if(this->match(TokenType::FUNCTION))
-        ;
+        return this->functionDeclaration();
 
     // Diğer durumlarda expression
+    return expressionStatement();
 }
 
 std::unique_ptr<Stmt> Parser::printStatement() {
@@ -85,6 +86,136 @@ std::unique_ptr<Stmt> Parser::ifStatement() {
 
     std::unique_ptr<Expression> condition = this->expression();
 
+    if(hasParentheses)
+        this->consume(TokenType::BRACKET_ROUND_RIGHT, "Koşul sonunda ')' bekleniyor.");
+
+
+    std::unique_ptr<Stmt> thenBranch = this->statement();
+
+    std::unique_ptr<Stmt> elseBranch = nullptr;
+    if(this->match(TokenType::ELSE))
+        elseBranch = this->statement();
+
+    return std::make_unique<IfStmt>(std::move(condition), std::move(thenBranch), std::move(elseBranch));
+}
+
+std::unique_ptr<Stmt> Parser::loopStatement() {
+    bool hasParentheses = this->match(TokenType::BRACKET_ROUND_LEFT);
+
+    std::unique_ptr<Expression> condition = this->expression();
+
+    if (hasParentheses)
+        this->consume(TokenType::BRACKET_ROUND_RIGHT, "Döngü koşulu sonunda ')' bekleniyor.");
+
+    std::unique_ptr<Stmt> body = this->statement();
+
+    return std::make_unique<LoopStmt>(std::move(condition), std::move(body));
+}
+
+std::unique_ptr<Stmt> Parser::breakStatement() {
+    Token keyword = this->previous();
+
+    this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<BreakStmt>(keyword);
+}
+
+std::unique_ptr<Stmt> Parser::continueStatement() {
+    Token keyword = this->previous();
+
+    this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<ContinueStmt>(keyword);
+}
+
+std::unique_ptr<Stmt> Parser::returnStatement() {
+    Token keyword = this->previous();
+    std::unique_ptr<Expression> value = nullptr;
+
+    if(!this->check(TokenType::SEMI_COLON))
+        value = this->expression();
+
+        this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<ReturnStmt>(keyword, std::move(value));
+}
+
+std::unique_ptr<Stmt> Parser::varDeclaration() {
+    bool isConst = this->previous().type == TokenType::CONST;
+
+    Token name = this->consume(TokenType::IDENTIFIER, "Değişken adı bekleniyor");
+
+    this->consume(TokenType::COLON, "Değişken adından sonra ':' bekleniyor.");
+
+    Token type;
+    if(this->match({TokenType::TYPE_STRING, TokenType::TYPE_NUMBER, TokenType::TYPE_BOOL}))
+        type = this->previous();
+    else
+        this->error(this->peek(), "Geçerli bir veri tipi bekleniyor (metin, sayı, doğruluk).");
+
+    bool isArray = false;
+
+    if(this->match(TokenType::BRACKET_SQUARE_LEFT)) {
+        this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi tanımında ']' bekleniyor.");
+        isArray = true;
+    }
+
+    std::unique_ptr<Expression> initializer = nullptr;
+
+    if(this->match(TokenType::EQUAL)) {
+        if(isArray && this->check(TokenType::BRACKET_SQUARE_LEFT))
+            initializer = this->arrayExpression();
+        else
+            initializer = this->expression();
+    }
+
+    this->match(TokenType::SEMI_COLON);
+
+    return std::make_unique<VarDeclStmt>(name, type, isArray, isConst, std::move(initializer));
+}
+
+std::unique_ptr<Stmt> Parser::functionDeclaration() {
+    Token name = this->consume(TokenType::IDENTIFIER, "Fonksiyon adı bekleniyor");
+
+    Token returnType;
+    if(this->match(TokenType::COLON)) {
+        if(this->match({TokenType::TYPE_STRING, TokenType::TYPE_NUMBER, TokenType::TYPE_BOOL}))
+            returnType = this->previous();
+        else
+            this->error(peek(), "Geçerli bir dönüş tipi bekleniyor (metin, sayı, doğruluk).");
+    }
+
+    this->consume(TokenType::ARROW, "Fonksiyon adından sonra '=>' bekleniyor.");
+
+    std::vector<Token> paramNames;
+    std::vector<Token> paramTypes;
+
+    if(!this->check(TokenType::BRACKET_CURLY_LEFT)) {
+        do {
+            paramNames.push_back(this->consume(TokenType::IDENTIFIER, "Parametre adı bekleniyor."));
+
+            this->consume(TokenType::COLON, "Parametre adından sonra ':' bekleniyor.");
+
+            if (this->match({TokenType::TYPE_STRING, TokenType::TYPE_NUMBER, TokenType::TYPE_BOOL}))
+                paramTypes.push_back(previous());
+            else
+                this->error(this->peek(), "Geçerli bir parametre tipi bekleniyor (metin, sayı, doğruluk).");
+
+            if (match(TokenType::BRACKET_SQUARE_LEFT)) {
+                Token& lastType = paramTypes.back();
+                std::string newTypeName = std::string(lastType.start, lastType.length) + "[]";
+
+                this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi parametresinde ']' bekleniyor.");
+            }
+
+        } while(this->match(TokenType::COMMA));
+    }
+
+    this->consume(TokenType::BRACKET_CURLY_LEFT, "Fonksiyon parametrelerinden sonra '{' bekleniyor.");
+
+    auto body = std::unique_ptr<BlockStmt>(static_cast<BlockStmt*>(this->blockStatement().release()));
+
+    return std::make_unique<FunctionDeclStmt>(name, returnType, std::move(paramNames), std::move(paramTypes), std::move(body));
 }
 
 
@@ -107,10 +238,10 @@ std::unique_ptr<Expression> Parser::assignment() {
 
         if (auto* arrayAccessExpr = dynamic_cast<ArrayAccessExpression*>(expression.get())) {
             // Dizi elemanı atama işlemi için özel bir AST düğümü oluşturulacak
-            error(equals, "Geçersiz atama hedefi.");
+            this->error(equals, "Geçersiz atama hedefi.");
         }
 
-        error(equals, "Geçersiz atama hedefi.");
+        this->error(equals, "Geçersiz atama hedefi.");
     }
 
     return expression;
@@ -235,7 +366,7 @@ std::unique_ptr<Expression> Parser::finishCall(std::unique_ptr<Expression> calle
         } while(this->match(TokenType::COMMA));
     }
 
-    Token paren = consume(TokenType::BRACKET_ROUND_RIGHT, "Fonksiyon çağrısı sonunda ')' bekleniyor.");
+    Token paren = this->consume(TokenType::BRACKET_ROUND_RIGHT, "Fonksiyon çağrısı sonunda ')' bekleniyor.");
 
     return std::make_unique<CallExpression>(std::move(callee), paren, std::move(arguments));
 }
@@ -248,7 +379,7 @@ std::unique_ptr<Expression> Parser::arrayAccess(std::unique_ptr<Expression> arra
 }
 
 std::unique_ptr<Expression> Parser::arrayExpression() {
-    Token bracket = consume(TokenType::BRACKET_SQUARE_LEFT, "Dizi ifadesinde '[' bekleniyor.");
+    Token bracket = this->consume(TokenType::BRACKET_SQUARE_LEFT, "Dizi ifadesinde '[' bekleniyor.");
     std::vector<std::unique_ptr<Expression>> elements;
 
     if(!this->check(TokenType::BRACKET_SQUARE_RIGHT)) {
@@ -256,7 +387,7 @@ std::unique_ptr<Expression> Parser::arrayExpression() {
             elements.push_back(this->expression());
         } while(this->match(TokenType::COMMA));
 
-        consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi ifadesinde ']' bekleniyor.");
+        this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi ifadesinde ']' bekleniyor.");
 
         return std::make_unique<ArrayExpression>(std::move(elements), bracket);
     }
@@ -280,13 +411,12 @@ std::unique_ptr<Expression> Parser::primary() {
 
     if (this->match(TokenType::BRACKET_ROUND_LEFT)) {
         std::unique_ptr<Expression> expression = this->expression();
-        consume(TokenType::BRACKET_ROUND_RIGHT, "İfade sonunda ')' bekleniyor.");
+        this->consume(TokenType::BRACKET_ROUND_RIGHT, "İfade sonunda ')' bekleniyor.");
         return expression;
     }
 
     this->error(this->peek(), "ifade bekleniyor.");
 }
-
 
 ///// EXPRESSION METOTLARI /////
 
