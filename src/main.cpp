@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "lexer/lexer.hpp"
+#include "parser/parser.hpp"
 
 void run(const char* filePath) {
     std::ifstream file(filePath);
@@ -26,6 +27,9 @@ void run(const char* filePath) {
                 << ", Line: " << token.line
                 << ", Column: " << token.column << std::endl;
     }
+
+    Parser parser(tokens);
+    std::unique_ptr<Program> program = parser.parse();
 
 }
 

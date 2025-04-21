@@ -1,1 +1,4 @@
-sayı doğruluk doğru
+deg x: sayı
+
+if(3>5)
+    yaz x
