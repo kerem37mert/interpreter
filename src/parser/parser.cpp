@@ -511,6 +511,5 @@ void Parser::error(const Token& token, const std::string& message) {
 
     std::cerr << "\033[1;31m=====================================\033[0m" << std::endl;
 
-    // Hata durumunda bir istisna fırlatarak mevcut işlemi durdur
     throw std::exception();
 }

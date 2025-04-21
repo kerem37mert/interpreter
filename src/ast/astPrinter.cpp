@@ -1,5 +1,7 @@
 #include "astPrinter.hpp"
 
+#include <iostream>
+
 void ASTPrinter::print(AstNode* node) {
     node->accept(*this);
 }
@@ -14,5 +16,12 @@ std::string ASTPrinter::getIndent() const {
 }
 
 void ASTPrinter::printNode(const std::string& name, const std::string& details) {
-    // yazılacak
+    std::cout << this->getIndent() << name;
+
+    if (!details.empty())
+        std::cout << " (" << details << ")";
+
+    std::cout << std::endl;
 }
+
+// Visitor Metotaları Yazılacak
