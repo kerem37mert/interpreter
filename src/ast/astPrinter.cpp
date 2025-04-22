@@ -194,3 +194,58 @@ void ASTPrinter::visitPrintStmt(PrintStmt* stmt) {
     this->indentLevel--;
 }
 
+void ASTPrinter::visitVarDeclStmt(VarDeclStmt* stmt) {
+    std::string name(stmt->name.start, stmt->name.length);
+    std::string type(stmt->type.start, stmt->type.length);
+    std::string kind = stmt->isConst ? "sbt" : "deg";
+
+    std::string details = "İsim: " + name + ", Tip: " + type;
+
+    if(stmt->isArray)
+        details += "[]";
+
+    this->printNode("Değişken Tanımı", details);
+
+    if(stmt->initializer) {
+        this->indentLevel++;
+        std::cout << this->getIndent() << "Başlangıç Değeri" << std::endl;
+        this->indentLevel++;
+        stmt->initializer->accept(*this);
+        this->indentLevel--;
+        this->indentLevel--;
+    }
+}
+
+void ASTPrinter::visitBlockStmt(BlockStmt* stmt) {
+    this->printNode("Kod BLoğu", "Deyim Sayısı: " + std::to_string(stmt->statements.size()));
+
+    this->indentLevel++;
+
+    for(auto& statement : stmt->statements)
+        statement->accept(*this);
+
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitIfStmt(IfStmt* stmt) {
+    this->printNode("Koşul Deyimi");
+
+    this->indentLevel++;
+    std::cout << this->getIndent() << "Koşul:" << std::endl;
+    this->indentLevel++;
+    stmt->condition->accept(*this);
+    this->indentLevel--;
+
+    std::cout << this->getIndent() << "Doğru Durumunuda:" << std::endl;
+    this->indentLevel++;
+    stmt->thenBranch->accept(*this);
+    this->indentLevel--;
+
+    if(stmt->elseBranch) {
+        std::cout << this->getIndent() << "Yanlış Durumda" << std::endl;
+        this->indentLevel++;
+        stmt->elseBranch->accept(*this);
+        this->indentLevel--;
+    }
+    this->indentLevel--;
+}
