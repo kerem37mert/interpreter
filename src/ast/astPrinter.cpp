@@ -123,3 +123,57 @@ void ASTPrinter::visitAssignExpression(AssignExpression* expr) {
     this->indentLevel--;
     this->indentLevel--;
 }
+
+void ASTPrinter::visitCallExpression(CallExpression* expr) {
+    this->printNode("Fonksiyon Çağrısı", "Argüman Sayısı: " + std::to_string(expr->arguments.size()));
+
+    this->indentLevel++;
+    std::cout << this->getIndent() << "Fonksiyon" << std::endl;
+    this->indentLevel++;
+    expr->callee->accept(*this);
+    this->indentLevel--;
+
+    if(!expr->arguments.empty()) {
+        std::cout << this->getIndent() << "Argümanlar" << std::endl;
+        this->indentLevel++;
+
+        for(auto& arg : expr->arguments)
+            arg->accept(*this);
+
+        this->indentLevel--;
+    }
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitArrayExpression(ArrayExpression* expr) {
+    this->printNode("Dizi İfadesi", "Eleman Sayısı: " + std::to_string(expr->elements.size()));
+
+    this->indentLevel++;
+
+    if(!expr->elements.empty()) {
+        std::cout << this->getIndent() << "Elemanlar" << std::endl;
+        this->indentLevel++;
+
+        for(auto& element : expr->elements)
+            element->accept(*this);
+
+        this->indentLevel--;
+    }
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitArrayAccessExpression(ArrayAccessExpression* expr) {
+    this->printNode("Dizi Erişimi");
+
+    this->indentLevel++;
+    std::cout << this->getIndent() << "Dizi:" << std::endl;
+    this->indentLevel++;
+    expr->array->accept(*this);
+    this->indentLevel--;
+
+    std::cout << this->getIndent() << "indeks" << std::endl;
+    this->indentLevel++;
+    expr->index->accept(*this);
+    this->indentLevel--;
+    this->indentLevel--;
+}
