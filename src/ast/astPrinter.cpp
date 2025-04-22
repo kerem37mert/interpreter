@@ -177,3 +177,20 @@ void ASTPrinter::visitArrayAccessExpression(ArrayAccessExpression* expr) {
     this->indentLevel--;
     this->indentLevel--;
 }
+
+void ASTPrinter::visitExpressionStmt(ExpressionStmt* stmt) {
+    this->printNode("İfade Deyimi");
+
+    this->indentLevel++;
+    stmt->expression->accept(*this);
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitPrintStmt(PrintStmt* stmt) {
+    this->printNode("Yazdırma Deyimi");
+
+    this->indentLevel++;
+    stmt->expression->accept(*this);
+    this->indentLevel--;
+}
+
