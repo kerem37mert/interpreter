@@ -1,3 +1,1 @@
-if 5>4 {
-    yaz 5;
-}
+sbt nmb: sayı = 5
