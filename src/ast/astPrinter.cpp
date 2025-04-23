@@ -104,7 +104,7 @@ void ASTPrinter::visitLiteralExpression(LiteralExpression* expr) {
             type = "bilinmeyen";
     }
 
-    this->printNode("Sabit Değer", "Değer" + value + ", Tip: " + type);
+    this->printNode("Sabit Değer", "Değer: " + value + ", Tip: " + type);
 }
 
 void ASTPrinter::visitVariableExpression(VariableExpression* expr) {
@@ -137,7 +137,7 @@ void ASTPrinter::visitCallExpression(CallExpression* expr) {
         std::cout << this->getIndent() << "Argümanlar" << std::endl;
         this->indentLevel++;
 
-        for(std::unique_ptr<Expression> arg : expr->arguments)
+        for(auto& arg : expr->arguments)
             arg->accept(*this);
 
         this->indentLevel--;
@@ -330,7 +330,7 @@ void ASTPrinter::visitProgram(Program* program) {
 
     this->indentLevel++;
 
-    for(std::unique_ptr<Stmt> statement : program->statements)
+    for(auto& statement : program->statements)
         statement->accept(*this);
 
     this->indentLevel--;

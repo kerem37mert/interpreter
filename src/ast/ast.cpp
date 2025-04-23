@@ -30,7 +30,7 @@ void ComparisonExpression::accept(ASTVisitor& visitor) {
 }
 
 LiteralExpression::LiteralExpression(const Token& token)
-    : token(token) {}
+    : token(token), value(token.start, token.length) {}
 
 void LiteralExpression::accept(ASTVisitor& visitor) {
     visitor.visitLiteralExpression(this);
