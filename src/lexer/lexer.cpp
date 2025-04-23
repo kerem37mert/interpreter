@@ -164,7 +164,7 @@ Token Lexer::identifierLiteral(char start) {
         return this->makeToken(TokenType::RETURN);
     if(lexemeStr == "eşle")
         return this->makeToken(TokenType::SWITCH);
-    if(lexemeStr == "kır")
+    if(lexemeStr == "dur")
         return this->makeToken(TokenType::BREAK);
     if(lexemeStr == "devam")
         return this->makeToken(TokenType::CONTINUE);

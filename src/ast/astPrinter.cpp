@@ -43,7 +43,7 @@ void ASTPrinter::visitBinaryExpression(BinaryExpression* expr) {
 }
 
 void ASTPrinter::visitLogicalExpression(LogicalExpression* expr) {
-    std::string op(expr->op.start(), expr->op.length);
+    std::string op(expr->op.start, expr->op.length);
     this->printNode("Mantıksal İfade", "İşlem" + op);
 
     this->indentLevel++;
@@ -137,7 +137,7 @@ void ASTPrinter::visitCallExpression(CallExpression* expr) {
         std::cout << this->getIndent() << "Argümanlar" << std::endl;
         this->indentLevel++;
 
-        for(auto& arg : expr->arguments)
+        for(std::unique_ptr<Expression> arg : expr->arguments)
             arg->accept(*this);
 
         this->indentLevel--;
@@ -249,3 +249,90 @@ void ASTPrinter::visitIfStmt(IfStmt* stmt) {
     }
     this->indentLevel--;
 }
+
+void ASTPrinter::visitLoopStmt(LoopStmt* stmt) {
+    this->printNode("Döngü Deyimi");
+
+    this->indentLevel++;
+    std::cout << this->getIndent() << "Koşul:" << std::endl;
+    this->indentLevel++;
+    stmt->condition->accept(*this);
+    this->indentLevel--;
+
+    std::cout << this->getIndent() << "Gövde:" << std::endl;
+    this->indentLevel++;
+    stmt->body->accept(*this);
+    this->indentLevel--;
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitBreakStmt(BreakStmt* stmt) {
+    this->printNode("Dur Deyimi");
+}
+
+
+void ASTPrinter::visitContinueStmt(ContinueStmt* stmt) {
+    this->printNode("Devam Deyimi");
+}
+
+void ASTPrinter::visitFunctionDeclStmt(FunctionDeclStmt* stmt) {
+    std::string name(stmt->name.start, stmt->name.length);
+
+    std::string returnTypeName;
+    if(stmt->returnType.type != TokenType::TOKEN_EOF)
+        returnTypeName = std::string(stmt->returnType.start, stmt->returnType.length);
+    else
+        returnTypeName = "void";
+
+    std::string details = "İsim: " + name + ", Dönüş Tipi: " + returnTypeName +
+                          ", Parametre Sayısı: " + std::to_string(stmt->paramNames.size());
+
+    this->printNode("Fonksiyon Tanımı", details);
+
+    this->indentLevel++;
+
+    if(!stmt->paramNames.empty())
+    {
+        std::cout << this->getIndent() << "Parametreler:" << std::endl;
+        this->indentLevel++;
+
+        for(unsigned int i=0; i<stmt->paramNames.size(); i++) {
+            std::string paramName(stmt->paramNames[i].start, stmt->paramNames[i].length);
+            std::string paramType(stmt->paramTypes[i].start, stmt->paramTypes[i].length);
+
+            this->printNode("Parametre", "İsim: " + paramName + ", Tip: " + paramType);
+        }
+        this->indentLevel--;
+    }
+
+    std::cout << this->getIndent() << "Gövde:" << std::endl;
+    this->indentLevel++;
+    stmt->body->accept(*this);
+    this->indentLevel--;
+    this->indentLevel--;
+}
+
+void ASTPrinter::visitReturnStmt(ReturnStmt* stmt) {
+    this->printNode("Dönüş Deyimi");
+
+    if (stmt->value) {
+        this->indentLevel++;
+        std::cout << getIndent() << "Değer:" << std::endl;
+        this->indentLevel++;
+        stmt->value->accept(*this);
+        this->indentLevel--;
+        this->indentLevel--;
+    }
+}
+
+void ASTPrinter::visitProgram(Program* program) {
+    this->printNode("Program", "Deyim Sayısı: " + std::to_string(program->statements.size()));
+
+    this->indentLevel++;
+
+    for(std::unique_ptr<Stmt> statement : program->statements)
+        statement->accept(*this);
+
+    this->indentLevel--;
+}
+

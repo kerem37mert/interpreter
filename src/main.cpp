@@ -3,6 +3,7 @@
 #include <sstream>
 #include "lexer/lexer.hpp"
 #include "parser/parser.hpp"
+#include "ast/astPrinter.hpp"
 
 void run(const char* filePath) {
     std::ifstream file(filePath);
@@ -30,6 +31,15 @@ void run(const char* filePath) {
 
     Parser parser(tokens);
     std::unique_ptr<Program> program = parser.parse();
+
+    std::cout << "===== AST AĞACI BAŞLANGIÇ =====" << std::endl;
+    if (program->statements.empty()) {
+        std::cout << "AST ağacı oluşturulamadı veya boş!" << std::endl;
+    } else {
+        ASTPrinter printer;
+        printer.print(program.get());
+    }
+    std::cout << "===== AST AĞACI BİTİŞ =====" << std::endl;
 
 }
 
