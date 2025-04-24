@@ -116,6 +116,17 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
+class ArrayAsignExpression : public Expression {
+public:
+    std::unique_ptr<Expression> array;
+    std::unique_ptr<Expression> index;
+    std::unique_ptr<Expression> value;
+
+    ArrayAsignExpression(std::unique_ptr<Expression> array, std::unique_ptr<Expression> index,
+        std::unique_ptr<Expression> value);
+    void accept(ASTVisitor& visitor) override;
+};
+
 class ExpressionStmt : public Stmt {
 public:
     std::unique_ptr<Expression> expression;
