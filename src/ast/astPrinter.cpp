@@ -27,7 +27,7 @@ void ASTPrinter::printNode(const std::string& name, const std::string& details) 
 // Visitor Metotaları
 void ASTPrinter::visitBinaryExpression(BinaryExpression* expr) {
     std::string op(expr->op.start, expr->op.length);
-    this->printNode("İkili ifade", "İşlem" + op);
+    this->printNode("İkili ifade", "İşlem: " + op);
 
     this->indentLevel++;
     std::cout << this->getIndent() << "Sol:" << std::endl;
@@ -44,7 +44,7 @@ void ASTPrinter::visitBinaryExpression(BinaryExpression* expr) {
 
 void ASTPrinter::visitLogicalExpression(LogicalExpression* expr) {
     std::string op(expr->op.start, expr->op.length);
-    this->printNode("Mantıksal İfade", "İşlem" + op);
+    this->printNode("Mantıksal İfade", "İşlem: " + op);
 
     this->indentLevel++;
     std::cout << this->getIndent() << "Sol:" << std::endl;
@@ -61,7 +61,7 @@ void ASTPrinter::visitLogicalExpression(LogicalExpression* expr) {
 
 void ASTPrinter::visitUnaryExpression(UnaryExpression* expr) {
     std::string op(expr->op.start, expr->op.length);
-    this->printNode("Tekli İfade", "İşlem" + op);
+    this->printNode("Tekli İfade", "İşlem: " + op);
 
     this->indentLevel++;
     expr->operand->accept(*this);
@@ -70,7 +70,7 @@ void ASTPrinter::visitUnaryExpression(UnaryExpression* expr) {
 
 void ASTPrinter::visitComparisonExpression(ComparisonExpression* expr) {
     std::string op(expr->op.start, expr->op.length);
-    this->printNode("Karşılaştırma İfadesi", "İşlem" + op);
+    this->printNode("Karşılaştırma İfadesi", "İşlem: " + op);
 
     this->indentLevel++;
     std::cout << this->getIndent() << "Sol:" << std::endl;

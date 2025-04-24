@@ -154,10 +154,12 @@ std::unique_ptr<Stmt> Parser::varDeclaration() {
         this->error(this->peek(), "Geçerli bir veri tipi bekleniyor (metin, sayı, doğruluk).");
 
     bool isArray = false;
+    int arrayDimensions = 0;
 
-    if(this->match(TokenType::BRACKET_SQUARE_LEFT)) {
+    while (this->match(TokenType::BRACKET_SQUARE_LEFT)) {
         this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi tanımında ']' bekleniyor.");
         isArray = true;
+        arrayDimensions++;
     }
 
     std::unique_ptr<Expression> initializer = nullptr;
@@ -237,8 +239,11 @@ std::unique_ptr<Expression> Parser::assignment() {
         }
 
         if (auto* arrayAccessExpr = dynamic_cast<ArrayAccessExpression*>(expression.get())) {
-            // Dizi elemanı atama işlemi için özel bir AST düğümü oluşturulacak
-            this->error(equals, "Geçersiz atama hedefi.");
+            return std::make_unique<ArrayAssignExpression>(
+                std::move(arrayAccessExpr->array),
+                std::move(arrayAccessExpr->index),
+                std::move(value)
+            );
         }
 
         this->error(equals, "Geçersiz atama hedefi.");
@@ -384,7 +389,11 @@ std::unique_ptr<Expression> Parser::arrayExpression() {
 
     if(!this->check(TokenType::BRACKET_SQUARE_RIGHT)) {
         do {
-            elements.push_back(this->expression());
+            if (this->check(TokenType::BRACKET_SQUARE_LEFT))
+                elements.push_back(arrayExpression());
+            else
+                elements.push_back(expression());
+
         } while(this->match(TokenType::COMMA));
 
         this->consume(TokenType::BRACKET_SQUARE_RIGHT, "Dizi ifadesinde ']' bekleniyor.");

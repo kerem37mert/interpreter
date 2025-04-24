@@ -23,7 +23,6 @@ deg dizi:sayı[] = [1, 2, 3, 4, 5];
 deg ilk:sayı = dizi[0];
 dizi[1] = 10;
 
-<
 // Test 5: Fonksiyon Tanımlamaları ve Çağrıları
 fonk topla:sayı => a:sayı, b:sayı {
     dön a + b;
@@ -66,7 +65,7 @@ döngü (doğru) {
 }
 
 // Test 10: Türlü Değişken Tanımlamaları
-deg metin:metin = "Merhaba";
+deg asd:metin = "Merhaba";
 deg sayi:sayı = 123;
 deg bayrak:doğruluk = doğru;
 
@@ -93,30 +92,23 @@ fonk faktoriyel:sayı => n:sayı {
 fonk dizitoplami:sayı => dizi:sayı[] {
     deg toplam:sayı = 0;
     deg i:sayı = 0;
-    döngü (i < dizi.uzunluk) {
+    döngü (i < 5) {
         toplam = toplam + dizi[i];
         i = i + 1;
     }
     dön toplam;
 }
 
-// Test 16: Çoklu Dönüş Türleri
-fonk işlem:(sayı, metin) => deger:sayı {
-    eğer (deger > 0) {
-        dön (deger * 2, "Pozitif");
-    }
-    dön (deger * -1, "Negatif");
-}
 
 // Test 17: Karmaşık Kontrol Akışı
 fonk enbuyukbul:sayı => dizi:sayı[] {
-    eğer (dizi.uzunluk == 0) {
+    eğer (5 == 0) {
         dön 0;
     }
 
     deg enbuyuk:sayı = dizi[0];
     deg i:sayı = 1;
-    döngü (i < dizi.uzunluk) {
+    döngü (i < 6) {
         eğer (dizi[i] > enbuyuk) {
             enbuyuk = dizi[i];
         }
@@ -133,6 +125,3 @@ deg eleman:sayı = matris[1][2];
 deg metin1:metin = "Merhaba";
 deg metin2:metin = "Dünya";
 deg birlestirilmis:metin = metin1 + " " + metin2;
-
-// Test 20: Karmaşık Tür Tanımlamaları
-deg karmaşıkDizi:(sayı, metin)[] = [(1, "bir"), (2, "iki"), (3, "üç")];

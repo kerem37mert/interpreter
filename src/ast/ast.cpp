@@ -73,6 +73,12 @@ void ArrayAccessExpression::accept(ASTVisitor& visitor) {
     visitor.visitArrayAccessExpression(this);
 }
 
+ArrayAssignExpression::ArrayAssignExpression(std::unique_ptr<Expression> array, std::unique_ptr<Expression> index,
+        std::unique_ptr<Expression> value)
+        : array(std::move(array)), index(std::move(index)), value(std::move(value)) {}
+
+void ArrayAssignExpression::accept(ASTVisitor& visitor) {}
+
 // Statements implementasyonları
 ExpressionStmt::ExpressionStmt(std::unique_ptr<Expression> expression)
     : expression(std::move(expression)) {}
