@@ -20,6 +20,8 @@ set(SOURCES
     src/ast/ast.hpp
     src/ast/astPrinter.hpp
     src/ast/astPrinter.cpp
+    src/interpreter/interpreter.hpp
+    src/interpreter/interpreter.cpp
 )
 
 add_executable(interpreter ${SOURCES})
