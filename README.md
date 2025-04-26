@@ -1,5 +1,11 @@
 # Yorumlayıcı Projesi
 
+## Kaynak Kodları Al
+
+```bash
+git clone https://github.com/kerem37mert/interpreter
+```
+
 ## Derle ve Çalıştır
 
 ```bash 
