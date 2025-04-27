@@ -67,7 +67,7 @@ veya geri dönüş değeri olmayan fonksiyon
    devam      // döngünün bir sonraki iterasyonuna geçer (continue)
 ```
 
-## Yaz Sözdizimi (Bir fonksiyon değildir, dilin yapısında olan bir anahtar kelimedir)
+## Yaz Sözdizimi (Bir fonksiyon değildir, dilin yapısında olan bir anahtar kelimedir) UYARI: Standart Kütüphane yazıldıktan sonra kaldırılacak
 ```interpereter (Dil için bir isim oluşturulacak)
     yaz "Merhaba Dünya!"
 ```
