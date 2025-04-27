@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(interpreter CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_COMPILER g++)
 
@@ -22,8 +22,8 @@ set(SOURCES
     src/ast/astPrinter.cpp
     src/interpreter/interpreter.hpp
     src/interpreter/interpreter.cpp
-    src/value.hpp
-    src/value.cpp
+    src/interpreter/value.hpp
+    src/interpreter/value.cpp
 )
 
 add_executable(interpreter ${SOURCES})

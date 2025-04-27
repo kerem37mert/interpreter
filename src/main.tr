@@ -1,4 +1,4 @@
-deg sayı: 10;
+deg yaş: sayı =  10;
 
-if(deg == 11)
+eğer(yaş == 11)
     yaz "eşit"

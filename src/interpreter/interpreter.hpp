@@ -7,7 +7,6 @@ public:
     Interpreter();
     void interpret(Program* program);
     void runTimeError(const Token& token, const std::string& message);
-
 };
 
 #endif //INTERPRETER_HPP
