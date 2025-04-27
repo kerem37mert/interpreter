@@ -13,6 +13,6 @@
 - fonk
 - dön 
 - eşle
-- kır 
+- dur 
 - devam 
 - yaz

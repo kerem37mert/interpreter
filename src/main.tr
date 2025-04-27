@@ -1,5 +1,4 @@
-eğer(3>4)
-    yaz "hello world"
+deg sayı: 10;
 
-    eğer(2==8)
-        yaz "world";
+if(deg == 11)
+    yaz "eşit"
