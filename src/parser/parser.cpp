@@ -305,7 +305,7 @@ std::unique_ptr<Expression> Parser::term() {
 
     while(this->match({TokenType::PLUS, TokenType::MINUS})) {
         Token op = this->previous();
-        auto right = this->factor();
+        std::unique_ptr<Expression> right = this->factor();
         expression = std::make_unique<BinaryExpression>(op, std::move(expression), std::move(right));
     }
 

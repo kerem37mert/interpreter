@@ -1,4 +1,1 @@
-deg yaş: sayı =  10;
-
-eğer(yaş == 11)
-    yaz "eşit"
+2+4*5
