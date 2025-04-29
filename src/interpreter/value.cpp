@@ -1,4 +1,5 @@
 #include "value.hpp"
+#include <sstream>
 
 Value::Value()
     : value(std::monostate{}) {}
@@ -49,4 +50,36 @@ const std::string& Value::asString() const {
 
 const std::vector<Value>& Value::asArray() const {
     return std::get<std::vector<Value>>(this->value);
+}
+
+std::string Value::toString() const {
+    if(this->isNil())
+        return "nil";
+
+    if(this->isBool())
+        return this->asBool() ? "true" : "false";
+
+    if(this->isNumber()) {
+        std::ostringstream oss;
+        oss << this->asNumber();
+        return oss.str();
+    }
+
+    if (isArray())
+    {
+        std::string result = "[";
+        const std::vector<Value>& array = this->asArray();
+
+        for (size_t i = 0; i < array.size(); ++i) {
+            if (i > 0) {
+                result += ", ";
+            }
+            result += array[i].toString();
+        }
+
+        result += "]";
+        return result;
+    }
+
+    return "bilinmeyen";
 }
