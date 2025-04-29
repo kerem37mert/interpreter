@@ -19,6 +19,18 @@ public:
     void visitArrayAccessExpression(ArrayAccessExpression* expr) override;
     void visitArrayAssignExpression(ArrayAssignExpression* expr) override;
 
+    void visitExpressionStmt(ExpressionStmt* stmt) override;
+    void visitPrintStmt(PrintStmt* stmt) override;
+    void visitVarDeclStmt(VarDeclStmt* stmt) override;
+    void visitBlockStmt(BlockStmt* stmt) override;
+    void visitIfStmt(IfStmt* stmt) override;
+    void visitLoopStmt(LoopStmt* stmt) override;
+    void visitBreakStmt(BreakStmt* stmt) override;
+    void visitContinueStmt(ContinueStmt* stmt) override;
+    void visitFunctionDeclStmt(FunctionDeclStmt* stmt) override;
+    void visitReturnStmt(ReturnStmt* stmt) override;
+    void visitProgram(Program* program) override;
+
     //void runTimeError(const Token& token, const std::string& message);
 };
 
