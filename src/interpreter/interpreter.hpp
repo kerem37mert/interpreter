@@ -1,13 +1,51 @@
 #ifndef INTERPRETER_HPP
 #define INTERPRETER_HPP
-#include "value.hpp"
+
+#include <memory>
+#include <unordered_map>
+#include <vector>
+#include <stack>
 #include "../ast/ast.hpp"
+#include "value.hpp"
 
 class Interpreter : public ASTVisitor {
 public:
     Interpreter();
-    void interpret(Program* program);
+    void interpret(AstNode* node);
 
+private:
+    // Çalışma zamanı ortamı
+    struct Environment {
+        std::unordered_map<std::string, Value> variables;
+        std::unordered_map<std::string, FunctionDeclStmt*> functions;
+        Environment* enclosing;
+
+        Environment() : enclosing(nullptr) {}
+        Environment(Environment* enclosing) : enclosing(enclosing) {}
+
+        void define(const std::string& name, const Value& value);
+        void defineFunction(const std::string& name, FunctionDeclStmt* function);
+        Value get(const std::string& name);
+        FunctionDeclStmt* getFunction(const std::string& name);
+        void assign(const std::string& name, const Value& value);
+    };
+
+    Environment* currentEnvironment;
+    std::stack<Environment*> environmentStack;
+    Value result;
+
+    void pushEnvironment();
+    void popEnvironment();
+    void enterBlock();
+    void exitBlock();
+    Value evaluate(Expression* expr);
+    void execute(Stmt* stmt);
+    bool isTruthy(const Value& value);
+    bool isEqual(const Value& a, const Value& b);
+    void checkNumberOperand(const Token& op, const Value& operand);
+    void checkNumberOperands(const Token& op, const Value& left, const Value& right);
+
+    // AST Visitor implementasyonları
     void visitBinaryExpression(BinaryExpression* expr) override;
     void visitLogicalExpression(LogicalExpression* expr) override;
     void visitUnaryExpression(UnaryExpression* expr) override;
@@ -31,11 +69,6 @@ public:
     void visitFunctionDeclStmt(FunctionDeclStmt* stmt) override;
     void visitReturnStmt(ReturnStmt* stmt) override;
     void visitProgram(Program* program) override;
-
-    //void runTimeError(const Token& token, const std::string& message);
-
-private:
-    Value result;
 };
 
-#endif //INTERPRETER_HPP
+#endif // INTERPRETER_HPP
