@@ -335,4 +335,3 @@ void ASTPrinter::visitProgram(Program* program) {
 
     this->indentLevel--;
 }
-
