@@ -248,7 +248,7 @@ public:
     virtual void visitCallExpression(CallExpression* expr) = 0;
     virtual void visitArrayExpression(ArrayExpression* expr) = 0;
     virtual void visitArrayAccessExpression(ArrayAccessExpression* expr) = 0;
-    virtual void visitArrayAssignExpression(ArrayAssignExpression* expr) = 0;
+    //virtual void visitArrayAssignExpression(ArrayAssignExpression* expr) = 0;
 
     virtual void visitExpressionStmt(ExpressionStmt* stmt) = 0;
     virtual void visitPrintStmt(PrintStmt* stmt) = 0;

@@ -57,7 +57,7 @@ std::string Value::toString() const {
         return "nil";
 
     if(this->isBool())
-        return this->asBool() ? "true" : "false";
+        return this->asBool() ? "doğru" : "yanlış";
 
     if(this->isNumber()) {
         std::ostringstream oss;

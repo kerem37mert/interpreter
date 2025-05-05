@@ -1,5 +1,6 @@
 #ifndef INTERPRETER_HPP
 #define INTERPRETER_HPP
+#include "value.hpp"
 #include "../ast/ast.hpp"
 
 class Interpreter : public ASTVisitor {
@@ -17,7 +18,7 @@ public:
     void visitCallExpression(CallExpression* expr) override;
     void visitArrayExpression(ArrayExpression* expr) override;
     void visitArrayAccessExpression(ArrayAccessExpression* expr) override;
-    void visitArrayAssignExpression(ArrayAssignExpression* expr) override;
+    //void visitArrayAssignExpression(ArrayAssignExpression* expr) override;
 
     void visitExpressionStmt(ExpressionStmt* stmt) override;
     void visitPrintStmt(PrintStmt* stmt) override;
@@ -32,6 +33,9 @@ public:
     void visitProgram(Program* program) override;
 
     //void runTimeError(const Token& token, const std::string& message);
+
+private:
+    Value result;
 };
 
 #endif //INTERPRETER_HPP
