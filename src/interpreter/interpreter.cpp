@@ -143,7 +143,7 @@ void Interpreter::visitBinaryExpression(BinaryExpression* expr) {
     if (op == "+") {
         if(left.isNumber() && right.isNumber())
             this->result = Value(left.asNumber() + right.asNumber());
-        else if (left.isString() && right.isString())
+        else if(left.isString() && right.isString())
             this->result = Value(left.asString() + right.asString());
         else
             throw std::runtime_error("Operandlar sayı veya metin olmalıdır.");
@@ -168,15 +168,85 @@ void Interpreter::visitBinaryExpression(BinaryExpression* expr) {
     }
 }
 
+void Interpreter::visitLogicalExpression(LogicalExpression* expr) {
+    Value left = evaluate(expr->left.get());
+
+    std::string op(expr->op.start, expr->op.length);
+
+    if(op == "&&") {
+        if (!this->isTruthy(left)) {
+            result = left;
+            return;
+        }
+
+        this->result = this->evaluate(expr->right.get());
+    } else if(op == "||") {
+        if (this->isTruthy(left)) {
+            this->result = left;
+            return;
+        }
+
+        this->result = this->evaluate(expr->right.get());
+    }
+}
+
 void Interpreter::visitUnaryExpression(UnaryExpression* expr) {
     Value right = this->evaluate(expr->operand.get());
 
     std::string op(expr->op.start, expr->op.length);
 
-    if (op == "-") {
+    if(op == "-") {
         this->checkNumberOperand(expr->op, right);
         this->result = Value(-right.asNumber());
-    } else if (op == "!") {
+    } else if(op == "!") {
         this->result = Value(!isTruthy(right));
     }
+}
+
+void Interpreter::visitComparisonExpression(ComparisonExpression* expr) {
+    Value left = this->evaluate(expr->left.get());
+    Value right = this->evaluate(expr->right.get());
+
+    std::string op(expr->op.start, expr->op.length);
+
+    if (op == ">") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() > right.asNumber());
+    } else if(op == ">=") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() >= right.asNumber());
+    } else if(op == "<") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() < right.asNumber());
+    } else if(op == "<=") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() <= right.asNumber());
+    } else if(op == "==")
+        this->result = Value(isEqual(left, right));
+    else if(op == "!=")
+        this->result = Value(!isEqual(left, right));
+}
+
+void Interpreter::visitLiteralExpression(LiteralExpression* expr) {
+    switch(expr->token.type) {
+    case TokenType::NUMBER_LITERAL:
+        this->result = Value(std::stod(expr->value));
+        break;
+    case TokenType::STRING_LITERAL:
+        this->result = Value(expr->value);
+        break;
+    case TokenType::TRUE:
+        this->result = Value(true);
+        break;
+    case TokenType::FALSE:
+        this->result = Value(false);
+        break;
+    default:
+        this->result = Value();
+    }
+}
+
+void Interpreter::visitVariableExpression(VariableExpression* expr) {
+    std::string name(expr->name.start, expr->name.length);
+    this->result = this->currentEnvironment->get(name);
 }
