@@ -250,3 +250,130 @@ void Interpreter::visitVariableExpression(VariableExpression* expr) {
     std::string name(expr->name.start, expr->name.length);
     this->result = this->currentEnvironment->get(name);
 }
+
+void Interpreter::visitAssignExpression(AssignExpression* expr) {
+    Value value = this->evaluate(expr->value.get());
+    std::string name(expr->name.start, expr->name.length);
+    this->currentEnvironment->assign(name, value);
+    this->result = value;
+}
+
+void Interpreter::visitCallExpression(CallExpression* expr) {
+    Value callee = this->evaluate(expr->callee.get());
+
+    std::vector<Value> arguments;
+    for (auto& arg : expr->arguments) {
+        arguments.push_back(evaluate(arg.get()));
+    }
+
+    // TODO: Fonksiyon çağrısı implementasyonu
+    this->result = Value();
+}
+
+void Interpreter::visitArrayExpression(ArrayExpression* expr) {
+    std::vector<Value> elements;
+    for (auto& element : expr->elements) {
+        elements.push_back(evaluate(element.get()));
+    }
+    this->result = Value(elements);
+}
+
+void Interpreter::visitArrayAccessExpression(ArrayAccessExpression* expr) {
+    Value array = this->evaluate(expr->array.get());
+    Value index = this->evaluate(expr->index.get());
+
+    if (!array.isArray())
+        throw std::runtime_error("Dizi olmayan bir değere erişim yapılamaz.");
+
+    if (!index.isNumber())
+        throw std::runtime_error("Dizi indeksi sayı olmalıdır.");
+
+    int idx = static_cast<int>(index.asNumber());
+    const std::vector<Value>& elements = array.asArray();
+
+    if (idx < 0 || idx >= elements.size())
+        throw std::runtime_error("Dizi indeksi sınırlar dışında.");
+
+    this->result = elements[idx];
+}
+
+/*void Interpreter::visitArrayAssignExpression(ArrayAssignExpression* expr) {
+    Value array = this->evaluate(expr->array.get());
+    Value index = this->evaluate(expr->index.get());
+    Value value = this->evaluate(expr->value.get());
+
+    if (!array.isArray())
+        throw std::runtime_error("Dizi olmayan bir değere atama yapılamaz.");
+
+    if (!index.isNumber())
+        throw std::runtime_error("Dizi indeksi sayı olmalıdır.");
+
+    // TODO: Dizi atama implementasyonu
+    this->result = value;
+}*/
+
+void Interpreter::visitExpressionStmt(ExpressionStmt* stmt) {
+    this->evaluate(stmt->expression.get());
+}
+
+void Interpreter::visitPrintStmt(PrintStmt* stmt) {
+    Value value = this->evaluate(stmt->expression.get());
+    std::cout << value.toString() << std::endl;
+}
+
+void Interpreter::visitVarDeclStmt(VarDeclStmt* stmt) {
+    Value value;
+
+    if(stmt->initializer != nullptr)
+        value = this->evaluate(stmt->initializer.get());
+
+    std::string name(stmt->name.start, stmt->name.length);
+    this->currentEnvironment->define(name, value);
+}
+
+void Interpreter::visitBlockStmt(BlockStmt* stmt) {
+    this->enterBlock();
+
+    for(auto& stmt : stmt->statements)
+        this->execute(stmt.get());
+
+    this->exitBlock();
+}
+
+void Interpreter::visitIfStmt(IfStmt* stmt) {
+    if (this->isTruthy(this->evaluate(stmt->condition.get())))
+        this->execute(stmt->thenBranch.get());
+    else if (stmt->elseBranch != nullptr)
+        this->execute(stmt->elseBranch.get());
+}
+
+void Interpreter::visitLoopStmt(LoopStmt* stmt) {
+    while(this->isTruthy(this->evaluate(stmt->condition.get())))
+        this->execute(stmt->body.get());
+}
+
+void Interpreter::visitBreakStmt(BreakStmt* stmt) {
+
+}
+
+void Interpreter::visitContinueStmt(ContinueStmt* stmt) {
+
+}
+
+void Interpreter::visitFunctionDeclStmt(FunctionDeclStmt* stmt) {
+    std::string name(stmt->name.start, stmt->name.length);
+    this->currentEnvironment->defineFunction(name, stmt);
+}
+
+void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
+    Value value;
+    if (stmt->value != nullptr) {
+        value = this->evaluate(stmt->value.get());
+    }
+    this->result = value;
+}
+
+void Interpreter::visitProgram(Program* program) {
+    for(auto& stmt : program->statements)
+        this->execute(stmt.get());
+}

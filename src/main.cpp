@@ -61,5 +61,4 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-// Todo: Lexer'da String Literal için kaçış karakterleri eklenecek.
-// Todo: Deterministik top-down algoritması araştırılacak.
+//Todo: Atama sırasında tip kontrolü yapılacak
