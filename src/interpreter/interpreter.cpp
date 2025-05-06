@@ -14,7 +14,7 @@ void Interpreter::Environment::defineFunction(const std::string& name, FunctionD
 Value Interpreter::Environment::get(const std::string& name) {
     auto it = this->variables.find(name);
 
-    if(it == this->variables.end())
+    if(it != this->variables.end())
         return it->second;
 
     if(this->enclosing != nullptr)

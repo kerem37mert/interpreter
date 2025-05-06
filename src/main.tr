@@ -1,1 +1,7 @@
-yaz 2+4*5
+fonk yazıcı => {
+    yaz "kerem";
+}
+
+sbt say: sayı = 5
+say = 4
+yaz say

@@ -64,4 +64,6 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-//Todo: Atama sırasında tip kontrolü yapılacak
+// Todo: Atama sırasında tip kontrolü yapılacak
+// Todo: Sabitlere değer sonradan değer atanmaması sağlanacak
+// Todo: Fonksiyon çağrıları uygulanacak
