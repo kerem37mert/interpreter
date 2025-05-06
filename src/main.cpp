@@ -4,6 +4,7 @@
 #include "lexer/lexer.hpp"
 #include "parser/parser.hpp"
 #include "ast/astPrinter.hpp"
+#include "interpreter/interpreter.hpp"
 
 void run(const char* filePath) {
     std::ifstream file(filePath);
@@ -41,6 +42,8 @@ void run(const char* filePath) {
     }
     std::cout << "===== AST AĞACI BİTİŞ =====" << std::endl;
 
+    Interpreter interpreter;
+    interpreter.interpret(program.get());
 }
 
 int main(int argc, char* argv[]) {
