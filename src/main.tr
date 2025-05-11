@@ -1,7 +1,4 @@
-fonk yazıcı => {
-    yaz "kerem";
-}
+sbt isim: metin
 
-sbt say: sayı = 5
-say = 4
-yaz say
+isim = "kerem"
+yaz isim

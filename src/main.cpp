@@ -67,3 +67,4 @@ int main(int argc, char* argv[]) {
 // Todo: Atama sırasında tip kontrolü yapılacak
 // Todo: Sabitlere değer sonradan değer atanmaması sağlanacak
 // Todo: Fonksiyon çağrıları uygulanacak
+// Todo: main.tr deki kodda bilinmeyen dönüyor incele

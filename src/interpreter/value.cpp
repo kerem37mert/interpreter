@@ -65,8 +65,15 @@ std::string Value::toString() const {
         return oss.str();
     }
 
-    if (isArray())
-    {
+    if(this->isString()) {
+        std::string str = this->asString();
+        if (!str.empty() && str.front() == '"' && str.back() == '"') {
+            return str.substr(1, str.length() - 2);
+        }
+        return str;
+    }
+
+    if(this->isArray()) {
         std::string result = "[";
         const std::vector<Value>& array = this->asArray();
 
