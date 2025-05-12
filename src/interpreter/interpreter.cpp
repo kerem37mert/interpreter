@@ -39,7 +39,7 @@ void Interpreter::Environment::assign(const std::string& name, const Value& valu
     if (it != variables.end()) {
         auto constIt = this->constants.find(name);
         if (constIt != this->constants.end() && constIt->second)
-            throw std::runtime_error("Sabit (const) bir değişkene değer atanamaz: " + name);
+            throw std::runtime_error("Sabit bir değişkene değer atanamaz: " + name);
 
         this->variables[name] = value;
         return;
