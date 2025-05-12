@@ -1,5 +1,3 @@
-deg isim: metin = "Kerem";
-
-deg  soyİsim: metin = "Mert"
-
-yaz isim + soyİsim;
+sbt name: metin = "kerem"
+name = "java"
+yaz name

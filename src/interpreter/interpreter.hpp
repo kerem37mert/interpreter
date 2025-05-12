@@ -18,12 +18,13 @@ private:
     struct Environment {
         std::unordered_map<std::string, Value> variables;
         std::unordered_map<std::string, FunctionDeclStmt*> functions;
+        std::unordered_map<std::string, bool> constants; // sbt/const değişkenler için
         Environment* enclosing;
 
         Environment() : enclosing(nullptr) {}
         Environment(Environment* enclosing) : enclosing(enclosing) {}
 
-        void define(const std::string& name, const Value& value);
+        void define(const std::string& name, const Value& value, bool isConst = false);
         void defineFunction(const std::string& name, FunctionDeclStmt* function);
         Value get(const std::string& name);
         FunctionDeclStmt* getFunction(const std::string& name);

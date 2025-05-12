@@ -3,8 +3,9 @@
 #include <cmath>
 #include <iostream>
 
-void Interpreter::Environment::define(const std::string& name, const Value& value) {
+void Interpreter::Environment::define(const std::string& name, const Value& value, bool isConst) {
     this->variables[name] = value;
+    this->constants[name] = isConst;
 }
 
 void Interpreter::Environment::defineFunction(const std::string& name, FunctionDeclStmt* function) {
@@ -36,7 +37,11 @@ void Interpreter::Environment::assign(const std::string& name, const Value& valu
     auto it = this->variables.find(name);
 
     if (it != variables.end()) {
-        variables[name] = value;
+        auto constIt = this->constants.find(name);
+        if (constIt != this->constants.end() && constIt->second)
+            throw std::runtime_error("Sabit (const) bir değişkene değer atanamaz: " + name);
+
+        this->variables[name] = value;
         return;
     }
 
@@ -328,7 +333,7 @@ void Interpreter::visitVarDeclStmt(VarDeclStmt* stmt) {
         value = this->evaluate(stmt->initializer.get());
 
     std::string name(stmt->name.start, stmt->name.length);
-    this->currentEnvironment->define(name, value);
+    this->currentEnvironment->define(name, value, stmt->isConst);
 }
 
 void Interpreter::visitBlockStmt(BlockStmt* stmt) {
