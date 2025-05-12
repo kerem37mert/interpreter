@@ -6,6 +6,9 @@
 #include "ast/astPrinter.hpp"
 #include "interpreter/interpreter.hpp"
 
+#define LEXER_TEST 0
+#define AST_TEST 0
+
 void run(const char* filePath) {
     std::ifstream file(filePath);
 
@@ -21,26 +24,30 @@ void run(const char* filePath) {
     Lexer lexer(source, filePath);
     std::vector<Token> tokens = lexer.scanner();
 
-    for(const Token& token : tokens) {
+    #if LEXER_TEST
+        for(const Token& token : tokens) {
 
-        std::string str(token.start, token.length);
-        std::cout
-                << ", Value: " << str
-                << ", Line: " << token.line
-                << ", Column: " << token.column << std::endl;
-    }
+            std::string str(token.start, token.length);
+            std::cout
+                    << ", Value: " << str
+                    << ", Line: " << token.line
+                    << ", Column: " << token.column << std::endl;
+        }
+    #endif
 
     Parser parser(tokens);
     std::unique_ptr<Program> program = parser.parse();
 
-    std::cout << "===== AST AĞACI BAŞLANGIÇ =====" << std::endl;
-    if (program->statements.empty()) {
-        std::cout << "AST ağacı oluşturulamadı veya boş!" << std::endl;
-    } else {
-        ASTPrinter printer;
-        printer.print(program.get());
-    }
-    std::cout << "===== AST AĞACI BİTİŞ =====" << std::endl;
+    #if AST_TEST
+        std::cout << "===== AST AĞACI BAŞLANGIÇ =====" << std::endl;
+        if (program->statements.empty()) {
+            std::cout << "AST ağacı oluşturulamadı veya boş!" << std::endl;
+        } else {
+            ASTPrinter printer;
+            printer.print(program.get());
+        }
+        std::cout << "===== AST AĞACI BİTİŞ =====" << std::endl;
+    #endif
 
     Interpreter interpreter;
     interpreter.interpret(program.get());
