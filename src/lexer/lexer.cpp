@@ -117,16 +117,20 @@ Token Lexer::errorToken(const char* errMsg) {
 }
 
 Token Lexer::stringLiteral() {
+    // Başlangıç tırnağından sonraki ilk karakteri işaretle
+    int stringStart = this->currentPosition;
     while(!this->isAtEnd() && this->peek() != '"') {
-       this->advance();
+        this->advance();
     }
 
     // Tamamlanmayan string
     if(this->isAtEnd())
         return this->errorToken("Sonlandırılmayan metinsel ifade");
 
+    // Son tırnağı da atla
     this->advance();
-    return this->makeToken(TokenType::STRING_LITERAL);
+    // Token'ın start'ı baştaki tırnaktan bir sonraki karakter, length'i ise iki tırnak hariç uzunluk
+    return Token(TokenType::STRING_LITERAL, this->fileName, &this->source[stringStart], (this->currentPosition - stringStart) - 1, this->currentLine, this->currentColumn);
 }
 
 Token Lexer::identifierLiteral(char start) {

@@ -1,4 +1,5 @@
-sbt isim: metin
+deg isim: metin = "Kerem";
 
-isim = "kerem"
-yaz isim
+deg  soyİsim: metin = "Mert"
+
+yaz isim + soyİsim;
