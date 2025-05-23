@@ -304,7 +304,20 @@ void Interpreter::visitCallExpression(CallExpression* expr) {
     std::string calleeName(varExpr->name.start, varExpr->name.length);
 
     // Fonksiyonu bul
-    FunctionDeclStmt* function = this->currentEnvironment->getFunction(calleeName);
+    FunctionDeclStmt* function = nullptr;
+    Environment* env = this->currentEnvironment;
+    while (env != nullptr) {
+        try {
+            function = env->getFunction(calleeName);
+            break;
+        } catch (const std::runtime_error&) {
+            env = env->enclosing;
+        }
+    }
+
+    if (!function) {
+        throw std::runtime_error("Tanımsız fonksiyon: " + calleeName);
+    }
 
     // Argümanları değerlendir
     std::vector<Value> arguments;
@@ -444,7 +457,8 @@ void Interpreter::visitContinueStmt(ContinueStmt* stmt) {
 
 void Interpreter::visitFunctionDeclStmt(FunctionDeclStmt* stmt) {
     std::string name(stmt->name.start, stmt->name.length);
-    this->currentEnvironment->defineFunction(name, stmt);
+    // Fonksiyonu global scope'ta tanımla
+    this->environmentStack.top()->defineFunction(name, stmt);
 }
 
 void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
