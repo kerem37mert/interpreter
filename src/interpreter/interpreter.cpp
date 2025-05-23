@@ -178,6 +178,10 @@ void Interpreter::visitBinaryExpression(BinaryExpression* expr) {
             this->result = Value(left.asNumber() + right.asNumber());
         else if(left.isString() && right.isString())
             this->result = Value(left.asString() + right.asString());
+        else if(left.isString() && right.isNumber())
+            this->result = Value(left.asString() + std::to_string(right.asNumber()));
+        else if(left.isNumber() && right.isString())
+            this->result = Value(std::to_string(left.asNumber()) + right.asString());
         else
             throw std::runtime_error("Operandlar sayı veya metin olmalıdır.");
     } else if(op == "-") {

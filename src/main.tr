@@ -1,6 +1,94 @@
-fonk topla: sayı => a: sayı, b: sayı {
-    yaz a + b
+// Temel fonksiyon çağrısı testi
+fonk selamla: metin => ad: metin {
+    dön "Merhaba " + ad
 }
 
-sbt sonuc: sayı = topla(5, 3)
-yaz sonuc  // 8 yazdıracak
+yaz selamla("Kerem")  // "Merhaba Kerem" yazdırmalı
+
+// Sayısal işlemler
+fonk topla: sayı => a: sayı, b: sayı {
+    dön a + b
+}
+
+fonk çıkar: sayı => a: sayı, b: sayı {
+    dön a - b
+}
+
+fonk çarp: sayı => a: sayı, b: sayı {
+    dön a * b
+}
+
+fonk böl: sayı => a: sayı, b: sayı {
+    dön a / b
+}
+
+sbt sonuc1: sayı = topla(10, 5)
+yaz "10 + 5 = " + sonuc1  // 15 yazdırmalı
+
+sbt sonuc2: sayı = çıkar(10, 5)
+yaz "10 - 5 = " + sonuc2  // 5 yazdırmalı
+
+sbt sonuc3: sayı = çarp(10, 5)
+yaz "10 * 5 = " + sonuc3  // 50 yazdırmalı
+
+sbt sonuc4: sayı = böl(10, 5)
+yaz "10 / 5 = " + sonuc4  // 2 yazdırmalı
+
+// İç içe fonksiyon çağrıları
+fonk kare: sayı => x: sayı {
+    dön x * x
+}
+
+fonk toplamKareler: sayı => a: sayı, b: sayı {
+    dön topla(kare(a), kare(b))
+}
+
+sbt sonuc5: sayı = toplamKareler(3, 4)
+yaz "3² + 4² = " + sonuc5  // 25 yazdırmalı
+
+// Boolean işlemler
+fonk büyükMü: doğruluk => a: sayı, b: sayı {
+    dön a > b
+}
+
+fonk eşitMi: doğruluk => a: sayı, b: sayı {
+    dön a == b
+}
+
+sbt sonuc6: doğruluk = büyükMü(10, 5)
+yaz "10 > 5 = " + sonuc6  // doğru yazdırmalı
+
+sbt sonuc7: doğruluk = eşitMi(5, 5)
+yaz "5 == 5 = " + sonuc7  // doğru yazdırmalı
+
+// Hata durumları testi
+// 1. Yanlış argüman sayısı
+// yaz topla(1)  // Hata: Argüman sayısı uyuşmuyor
+
+// 2. Yanlış tip
+// yaz topla("merhaba", 5)  // Hata: Tip uyuşmazlığı
+
+// 3. Tanımsız fonksiyon
+// yaz tanimsizFonksiyon()  // Hata: Tanımsız fonksiyon
+
+// 4. İç içe fonksiyon tanımları
+fonk dışFonksiyon: sayı => x: sayı {
+    fonk içFonksiyon: sayı => y: sayı {
+        dön y * 2
+    }
+    dön içFonksiyon(x)
+}
+
+sbt sonuc9: sayı = dışFonksiyon(5)
+yaz "İç içe fonksiyon sonucu = " + sonuc9  // 10 yazdırmalı
+
+// 5. Recursive fonksiyon
+fonk faktöriyel: sayı => n: sayı {
+    eğer (n <= 1) {
+        dön 1
+    }
+    dön n * faktöriyel(n - 1)
+}
+
+sbt sonuc10: sayı = faktöriyel(5)
+yaz "5! = " + sonuc10  // 120 yazdırmalı
