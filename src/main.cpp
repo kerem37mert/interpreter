@@ -72,7 +72,6 @@ int main(int argc, char* argv[]) {
 }
 
 // Todo: Atama sırasında tip kontrolü yapılacak (Tamamlandı)
-// Todo: Aynı scopeda aynı isimli birden fazla değişken tanımlanamamalı
+// Todo: Aynı scopeda aynı isimli birden fazla değişken tanımlanamamalı (Tamamlandı)
 // Todo: Sabitlere değer sonradan değer atanmaması sağlanacak (TAMAMLANDI)
 // Todo: Fonksiyon çağrıları uygulanacak
-// Todo: main.tr deki kodda bilinmeyen dönüyor incele

@@ -292,15 +292,57 @@ void Interpreter::visitAssignExpression(AssignExpression* expr) {
 }
 
 void Interpreter::visitCallExpression(CallExpression* expr) {
-    Value callee = this->evaluate(expr->callee.get());
+    // Fonksiyon adını al
+    VariableExpression* varExpr = dynamic_cast<VariableExpression*>(expr->callee.get());
+    if (!varExpr) {
+        throw std::runtime_error("Fonksiyon çağrısı geçersiz.");
+    }
+    std::string calleeName(varExpr->name.start, varExpr->name.length);
 
+    // Fonksiyonu bul
+    FunctionDeclStmt* function = this->currentEnvironment->getFunction(calleeName);
+
+    // Argümanları değerlendir
     std::vector<Value> arguments;
     for (auto& arg : expr->arguments) {
         arguments.push_back(evaluate(arg.get()));
     }
 
-    // TODO: Fonksiyon çağrısı implementasyonu
-    this->result = Value();
+    // Argüman sayısı kontrolü
+    if (arguments.size() != function->paramNames.size()) {
+        throw std::runtime_error("Fonksiyon çağrısında argüman sayısı uyuşmuyor. Beklenen: " +
+            std::to_string(function->paramNames.size()) + ", Verilen: " +
+            std::to_string(arguments.size()));
+    }
+
+    // Yeni bir çevre oluştur
+    this->pushEnvironment();
+
+    // Parametreleri yeni çevreye ekle
+    for (size_t i = 0; i < function->paramNames.size(); i++) {
+        std::string paramName(function->paramNames[i].start, function->paramNames[i].length);
+        std::string paramType(function->paramTypes[i].start, function->paramTypes[i].length);
+
+        // Tip kontrolü
+        this->checkTypeCompatibility(paramType, arguments[i]);
+
+        this->currentEnvironment->define(paramName, arguments[i]);
+    }
+
+    // Fonksiyon gövdesini çalıştır
+    try {
+        this->execute(function->body.get());
+    } catch (const std::runtime_error& e) {
+        if (std::string(e.what()) == "RETURN") {
+            // Return değeri zaten result'ta, bir şey yapmaya gerek yok
+        } else {
+            this->popEnvironment();
+            throw e;
+        }
+    }
+
+    // Çevreyi temizle
+    this->popEnvironment();
 }
 
 void Interpreter::visitArrayExpression(ArrayExpression* expr) {
@@ -407,6 +449,7 @@ void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
         value = this->evaluate(stmt->value.get());
     }
     this->result = value;
+    throw std::runtime_error("RETURN");
 }
 
 void Interpreter::visitProgram(Program* program) {

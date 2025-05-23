@@ -1,4 +1,6 @@
-deg say: sayı = 10;
-{deg say: sayı = 20; yaz say}
+fonk topla: sayı => a: sayı, b: sayı {
+    yaz a + b
+}
 
-yaz say
+sbt sonuc: sayı = topla(5, 3)
+yaz sonuc  // 8 yazdıracak
