@@ -1,4 +1,3 @@
-sbt name: metin = "kerem"
-name = "java"
-
-yaz name
+deg say: doğruluk = doğru
+say = 5
+yaz say

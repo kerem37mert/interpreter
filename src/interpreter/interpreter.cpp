@@ -41,6 +41,17 @@ void Interpreter::Environment::assign(const std::string& name, const Value& valu
         if (constIt != this->constants.end() && constIt->second)
             throw std::runtime_error("Sabit bir değişkene değer atanamaz: " + name);
 
+        // Tip kontrolü
+        Value currentValue = it->second;
+        if (currentValue.isNumber() && !value.isNumber())
+            throw std::runtime_error("Sayı tipindeki değişkene sayı olmayan bir değer atanamaz: " + name);
+        if (currentValue.isString() && !value.isString())
+            throw std::runtime_error("Metin tipindeki değişkene metin olmayan bir değer atanamaz: " + name);
+        if (currentValue.isBool() && !value.isBool())
+            throw std::runtime_error("Boolean tipindeki değişkene boolean olmayan bir değer atanamaz: " + name);
+        if (currentValue.isArray() && !value.isArray())
+            throw std::runtime_error("Dizi tipindeki değişkene dizi olmayan bir değer atanamaz: " + name);
+
         this->variables[name] = value;
         return;
     }
@@ -137,6 +148,20 @@ void Interpreter::checkNumberOperands(const Token& op, const Value& left, const 
         return;
 
     throw std::runtime_error("Operandlar sayı olmalıdır.");
+}
+
+void Interpreter::checkTypeCompatibility(const std::string& type, const Value& value) {
+    if (type == "sayı" && !value.isNumber())
+        throw std::runtime_error("Sayı tipindeki değişkene sayı olmayan bir değer atanamaz.");
+
+    if (type == "metin" && !value.isString())
+        throw std::runtime_error("Metin tipindeki değişkene metin olmayan bir değer atanamaz.");
+
+    if (type == "boolean" && !value.isBool())
+        throw std::runtime_error("Boolean tipindeki değişkene boolean olmayan bir değer atanamaz.");
+
+    if (type == "dizi" && !value.isArray())
+        throw std::runtime_error("Dizi tipindeki değişkene dizi olmayan bir değer atanamaz.");
 }
 
 void Interpreter::visitBinaryExpression(BinaryExpression* expr) {
@@ -329,8 +354,11 @@ void Interpreter::visitPrintStmt(PrintStmt* stmt) {
 void Interpreter::visitVarDeclStmt(VarDeclStmt* stmt) {
     Value value;
 
-    if(stmt->initializer != nullptr)
+    if(stmt->initializer != nullptr) {
         value = this->evaluate(stmt->initializer.get());
+        std::string type(stmt->type.start, stmt->type.length);
+        this->checkTypeCompatibility(type, value);
+    }
 
     std::string name(stmt->name.start, stmt->name.length);
     this->currentEnvironment->define(name, value, stmt->isConst);

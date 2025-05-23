@@ -45,6 +45,8 @@ private:
     bool isEqual(const Value& a, const Value& b);
     void checkNumberOperand(const Token& op, const Value& operand);
     void checkNumberOperands(const Token& op, const Value& left, const Value& right);
+    void checkTypeCompatibility(const std::string& type, const Value& value);
+
 
     // AST Visitor implementasyonları
     void visitBinaryExpression(BinaryExpression* expr) override;
