@@ -74,4 +74,6 @@ int main(int argc, char* argv[]) {
 // Todo: Atama sırasında tip kontrolü yapılacak (Tamamlandı)
 // Todo: Aynı scopeda aynı isimli birden fazla değişken tanımlanamamalı (Tamamlandı)
 // Todo: Sabitlere değer sonradan değer atanmaması sağlanacak (TAMAMLANDI)
-// Todo: Fonksiyon çağrıları uygulanacak
+// Todo: Fonksiyon çağrıları uygulanacak (TAMAMLANDI)
+// Todo: Fonksiyon kontrolleri gerçekleştirilecek (tür, argüman)
+// Todo: Dur ve Devaö deyimlerinin çalıştırılması sağlanacak

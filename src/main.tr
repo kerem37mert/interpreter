@@ -84,10 +84,10 @@ yaz "İç içe fonksiyon sonucu = " + sonuc9  // 10 yazdırmalı
 
 // 5. Recursive fonksiyon
 fonk faktöriyel: sayı => n: sayı {
-    eğer (n <= 1) {
+    eğer n <= 1
         dön 1
-    }
-    dön n * faktöriyel(n - 1)
+     yoksa
+        dön n * faktöriyel(n - 1)
 }
 
 sbt sonuc10: sayı = faktöriyel(5)
