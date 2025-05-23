@@ -1,3 +1,4 @@
-deg say: doğruluk = doğru
-say = 5
+deg say: sayı = 10;
+{deg say: sayı = 20; yaz say}
+
 yaz say

@@ -4,6 +4,9 @@
 #include <iostream>
 
 void Interpreter::Environment::define(const std::string& name, const Value& value, bool isConst) {
+    if(this->variables.find(name) != this->variables.end())
+        throw std::runtime_error("Bu isimde bir değişken zaten tanımlı: " + name);
+
     this->variables[name] = value;
     this->constants[name] = isConst;
 }
