@@ -467,10 +467,50 @@ void Interpreter::visitFunctionDeclStmt(FunctionDeclStmt* stmt) {
 }
 
 void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
-    Value value;
-    if (stmt->value != nullptr) {
-        value = this->evaluate(stmt->value.get());
+    // Fonksiyonun dönüş tipini bul
+    std::string returnType;
+    Environment* env = this->currentEnvironment;
+    while (env != nullptr) {
+        for (const auto& [name, func] : env->functions) {
+            // Fonksiyonun gövdesini kontrol et
+            if (func->body.get() && func->body->statements.size() > 0) {
+                // Return ifadesinin bu fonksiyonun gövdesinde olup olmadığını kontrol et
+                for (const auto& bodyStmt : func->body->statements) {
+                    if (bodyStmt.get() == stmt) {
+                        returnType = std::string(func->returnType.start, func->returnType.length);
+                        break;
+                    }
+                }
+            }
+            if (!returnType.empty()) break;
+        }
+        if (!returnType.empty()) break;
+        env = env->enclosing;
     }
+
+    // Dönüş değeri yoksa
+    if (stmt->value == nullptr) {
+        if (returnType != "boş") {
+            throw std::runtime_error("Fonksiyon " + returnType + " tipinde değer döndürmeli.");
+        }
+        this->result = Value();
+        throw std::runtime_error("RETURN");
+    }
+
+    // Dönüş değeri varsa
+    Value value = this->evaluate(stmt->value.get());
+
+    // Dönüş tipi kontrolü
+    if (returnType == "boş") {
+        throw std::runtime_error("Fonksiyon değer döndürmemeli.");
+    } else if (returnType == "sayı" && !value.isNumber()) {
+        throw std::runtime_error("Fonksiyon sayı tipinde değer döndürmeli.");
+    } else if (returnType == "metin" && !value.isString()) {
+        throw std::runtime_error("Fonksiyon metin tipinde değer döndürmeli.");
+    } else if (returnType == "doğruluk" && !value.isBool()) {
+        throw std::runtime_error("Fonksiyon doğruluk tipinde değer döndürmeli.");
+    }
+
     this->result = value;
     throw std::runtime_error("RETURN");
 }

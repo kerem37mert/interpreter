@@ -1,17 +1,10 @@
-// Temel fonksiyon çağrısı testi
-fonk selamla: metin => ad: metin {
-    dön "Merhaba " + ad
+// Temel fonksiyon tanımlama ve çağırma testleri
+fonk selamla: metin => isim: metin {
+    dön "Merhaba " + isim
 }
 
-yaz selamla("Kerem")  // "Merhaba Kerem" yazdırmalı
-
-// Sayısal işlemler
 fonk topla: sayı => a: sayı, b: sayı {
     dön a + b
-}
-
-fonk çıkar: sayı => a: sayı, b: sayı {
-    dön a - b
 }
 
 fonk çarp: sayı => a: sayı, b: sayı {
@@ -19,76 +12,86 @@ fonk çarp: sayı => a: sayı, b: sayı {
 }
 
 fonk böl: sayı => a: sayı, b: sayı {
+    eğer b == 0 {
+        dön 0
+    }
     dön a / b
 }
 
-sbt sonuc1: sayı = topla(10, 5)
-yaz "10 + 5 = " + sonuc1  // 15 yazdırmalı
-
-sbt sonuc2: sayı = çıkar(10, 5)
-yaz "10 - 5 = " + sonuc2  // 5 yazdırmalı
-
-sbt sonuc3: sayı = çarp(10, 5)
-yaz "10 * 5 = " + sonuc3  // 50 yazdırmalı
-
-sbt sonuc4: sayı = böl(10, 5)
-yaz "10 / 5 = " + sonuc4  // 2 yazdırmalı
-
-// İç içe fonksiyon çağrıları
 fonk kare: sayı => x: sayı {
     dön x * x
 }
 
-fonk toplamKareler: sayı => a: sayı, b: sayı {
-    dön topla(kare(a), kare(b))
-}
-
-sbt sonuc5: sayı = toplamKareler(3, 4)
-yaz "3² + 4² = " + sonuc5  // 25 yazdırmalı
-
-// Boolean işlemler
-fonk büyükMü: doğruluk => a: sayı, b: sayı {
-    dön a > b
-}
-
-fonk eşitMi: doğruluk => a: sayı, b: sayı {
-    dön a == b
-}
-
-sbt sonuc6: doğruluk = büyükMü(10, 5)
-yaz "10 > 5 = " + sonuc6  // doğru yazdırmalı
-
-sbt sonuc7: doğruluk = eşitMi(5, 5)
-yaz "5 == 5 = " + sonuc7  // doğru yazdırmalı
-
-// Hata durumları testi
-// 1. Yanlış argüman sayısı
-// yaz topla(1)  // Hata: Argüman sayısı uyuşmuyor
-
-// 2. Yanlış tip
-// yaz topla("merhaba", 5)  // Hata: Tip uyuşmazlığı
-
-// 3. Tanımsız fonksiyon
-// yaz tanimsizFonksiyon()  // Hata: Tanımsız fonksiyon
-
-// 4. İç içe fonksiyon tanımları
-fonk dışFonksiyon: sayı => x: sayı {
-    fonk içFonksiyon: sayı => y: sayı {
-        dön y * 2
+fonk mutlak: sayı => x: sayı {
+    eğer x < 0 {
+        dön -x
     }
-    dön içFonksiyon(x)
+    dön x
 }
 
-sbt sonuc9: sayı = dışFonksiyon(5)
-yaz "İç içe fonksiyon sonucu = " + sonuc9  // 10 yazdırmalı
+fonk pozitif_mi: doğruluk => x: sayı {
+    dön x > 0
+}
 
-// 5. Recursive fonksiyon
+fonk çift_mi: doğruluk => x: sayı {
+    dön x % 2 == 0
+}
+
 fonk faktöriyel: sayı => n: sayı {
-    eğer n <= 1
+    eğer n <= 0 {
         dön 1
-     yoksa
-        dön n * faktöriyel(n - 1)
+    }
+    dön n * faktöriyel(n - 1)
 }
 
-sbt sonuc10: sayı = faktöriyel(5)
-yaz "5! = " + sonuc10  // 120 yazdırmalı
+fonk fibonacci: sayı => n: sayı {
+    eğer n <= 1 {
+        dön n
+    }
+    dön fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+fonk asal_mi: doğruluk => n: sayı {
+    eğer n <= 1 {
+        dön yanlış
+    }
+    
+    deg i: sayı = 2
+    döngü i * i <= n {
+        eğer n % i == 0 {
+            dön yanlış
+        }
+        i = i + 1
+    }
+    dön doğru
+}
+
+fonk ebob: sayı => a: sayı, b: sayı {
+    eğer b == 0 {
+        dön a
+    }
+    dön ebob(b, a % b)
+}
+
+fonk ekok: sayı => a: sayı, b: sayı {
+    dön (a * b) / ebob(a, b)
+}
+
+// Test çağrıları
+yaz selamla("Dünya")  // "Merhaba Dünya" yazdırmalı
+yaz topla(5, 3)       // 8 yazdırmalı
+yaz çarp(4, 6)        // 24 yazdırmalı
+yaz böl(10, 2)        // 5 yazdırmalı
+yaz kare(5)           // 25 yazdırmalı
+yaz mutlak(-7)        // 7 yazdırmalı
+yaz pozitif_mi(5)     // doğru yazdırmalı
+yaz pozitif_mi(-3)    // yanlış yazdırmalı
+yaz çift_mi(4)        // doğru yazdırmalı
+yaz çift_mi(7)        // yanlış yazdırmalı
+yaz faktöriyel(5)     // 120 yazdırmalı
+yaz fibonacci(7)      // 13 yazdırmalı
+yaz asal_mi(17)       // doğru yazdırmalı
+yaz asal_mi(24)       // yanlış yazdırmalı
+yaz ebob(48, 18)      // 6 yazdırmalı
+yaz ekok(12, 18)      // 36 yazdırmalı
+yazdır_çarpım_tablosu(3)  // 1'den 3'e kadar çarpım tablosunu yazdırmalı 
