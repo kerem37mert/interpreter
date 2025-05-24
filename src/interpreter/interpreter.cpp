@@ -448,16 +448,28 @@ void Interpreter::visitIfStmt(IfStmt* stmt) {
 }
 
 void Interpreter::visitLoopStmt(LoopStmt* stmt) {
-    while(this->isTruthy(this->evaluate(stmt->condition.get())))
-        this->execute(stmt->body.get());
+    while(this->isTruthy(this->evaluate(stmt->condition.get()))) {
+        try {
+            this->execute(stmt->body.get());
+        } catch (const std::runtime_error& e) {
+            std::string error = e.what();
+            if (error == "BREAK") {
+                break;
+            } else if (error == "CONTINUE") {
+                continue;
+            } else {
+                throw e;
+            }
+        }
+    }
 }
 
 void Interpreter::visitBreakStmt(BreakStmt* stmt) {
-
+    throw std::runtime_error("BREAK");
 }
 
 void Interpreter::visitContinueStmt(ContinueStmt* stmt) {
-
+    throw std::runtime_error("CONTINUE");
 }
 
 void Interpreter::visitFunctionDeclStmt(FunctionDeclStmt* stmt) {
@@ -477,6 +489,14 @@ void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
                 // Return ifadesinin bu fonksiyonun gövdesinde olup olmadığını kontrol et
                 for (const auto& bodyStmt : func->body->statements) {
                     if (bodyStmt.get() == stmt) {
+                        // Eğer returnType token'ı EOF ise, bu fonksiyon değer döndürmüyor demektir
+                        if (func->returnType.type == TokenType::TOKEN_EOF) {
+                            if (stmt->value != nullptr) {
+                                throw std::runtime_error("Bu fonksiyon değer döndürmemeli.");
+                            }
+                            this->result = Value();
+                            throw std::runtime_error("RETURN");
+                        }
                         returnType = std::string(func->returnType.start, func->returnType.length);
                         break;
                     }
@@ -490,26 +510,19 @@ void Interpreter::visitReturnStmt(ReturnStmt* stmt) {
 
     // Dönüş değeri yoksa
     if (stmt->value == nullptr) {
-        if (returnType != "boş") {
-            throw std::runtime_error("Fonksiyon " + returnType + " tipinde değer döndürmeli.");
-        }
-        this->result = Value();
-        throw std::runtime_error("RETURN");
+        throw std::runtime_error("Fonksiyon " + returnType + " tipinde değer döndürmeli.");
     }
 
     // Dönüş değeri varsa
     Value value = this->evaluate(stmt->value.get());
 
     // Dönüş tipi kontrolü
-    if (returnType == "boş") {
-        throw std::runtime_error("Fonksiyon değer döndürmemeli.");
-    } else if (returnType == "sayı" && !value.isNumber()) {
+    if (returnType == "sayı" && !value.isNumber())
         throw std::runtime_error("Fonksiyon sayı tipinde değer döndürmeli.");
-    } else if (returnType == "metin" && !value.isString()) {
+    if (returnType == "metin" && !value.isString())
         throw std::runtime_error("Fonksiyon metin tipinde değer döndürmeli.");
-    } else if (returnType == "doğruluk" && !value.isBool()) {
+    if (returnType == "doğruluk" && !value.isBool())
         throw std::runtime_error("Fonksiyon doğruluk tipinde değer döndürmeli.");
-    }
 
     this->result = value;
     throw std::runtime_error("RETURN");

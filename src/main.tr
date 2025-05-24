@@ -1,5 +1,5 @@
 // Temel fonksiyon tanımlama ve çağırma testleri
-fonk selamla: metin => isim: metin {
+fonk selamla => isim: metin {
     dön "Merhaba " + isim
 }
 
@@ -55,7 +55,7 @@ fonk asal_mi: doğruluk => n: sayı {
     eğer n <= 1 {
         dön yanlış
     }
-    
+
     deg i: sayı = 2
     döngü i * i <= n {
         eğer n % i == 0 {
@@ -94,4 +94,3 @@ yaz asal_mi(17)       // doğru yazdırmalı
 yaz asal_mi(24)       // yanlış yazdırmalı
 yaz ebob(48, 18)      // 6 yazdırmalı
 yaz ekok(12, 18)      // 36 yazdırmalı
-yazdır_çarpım_tablosu(3)  // 1'den 3'e kadar çarpım tablosunu yazdırmalı 
