@@ -210,6 +210,33 @@ void Interpreter::visitBinaryExpression(BinaryExpression* expr) {
     } else if(op == "**") {
         this->checkNumberOperands(expr->op, left, right);
         this->result = Value(pow(left.asNumber(), right.asNumber()));
+    } else if (op == "+=") {
+        if (left.isNumber() && right.isNumber()) {
+            this->result = Value(left.asNumber() + right.asNumber());
+        } else if (left.isString() && right.isString()) {
+            this->result = Value(left.asString() + right.asString());
+        } else if (left.isString() && right.isNumber()) {
+            this->result = Value(left.asString() + std::to_string(right.asNumber()));
+        } else if (left.isNumber() && right.isString()) {
+            this->result = Value(std::to_string(left.asNumber()) + right.asString());
+        } else if (left.isString() && right.isBool()) {
+            this->result = Value(left.asString() + (right.asBool() ? "doğru" : "yanlış"));
+        } else if (left.isBool() && right.isString()) {
+            this->result = Value((left.asBool() ? "doğru" : "yanlış") + right.asString());
+        } else {
+            throw std::runtime_error("Operandlar sayı, metin veya doğruluk değeri olmalıdır.");
+        }
+    } else if (op == "-=") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() - right.asNumber());
+    } else if (op == "*=") {
+        this->checkNumberOperands(expr->op, left, right);
+        this->result = Value(left.asNumber() * right.asNumber());
+    } else if (op == "/=") {
+        this->checkNumberOperands(expr->op, left, right);
+        if (right.asNumber() == 0)
+            throw std::runtime_error("Sıfıra bölme hatası.");
+        this->result = Value(left.asNumber() / right.asNumber());
     }
 }
 

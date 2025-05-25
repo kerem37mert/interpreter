@@ -1,1 +1,5 @@
-yaz 5 ** 3
+deg s: metin = "4";
+
+s -= 8
+
+yaz s

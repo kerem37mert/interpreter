@@ -229,12 +229,38 @@ std::unique_ptr<Expression> Parser::expression() {
 std::unique_ptr<Expression> Parser::assignment() {
     std::unique_ptr<Expression> expression = this->logicalOr();
 
-    if(this->match(TokenType::EQUAL)) {
+    if(this->match({TokenType::EQUAL, TokenType::PLUS_EQUAL, TokenType::MINUS_EQUAL, TokenType::MULTIPLY_EQUAL, TokenType::DIVIDE_EQUAL})) {
         Token equals = this->previous();
         std::unique_ptr<Expression> value = this->assignment();
 
         if (VariableExpression* varExpr = dynamic_cast<VariableExpression*>(expression.get())) {
             Token name = varExpr->name;
+
+            if (equals.type != TokenType::EQUAL) {
+                std::unique_ptr<Expression> left = std::make_unique<VariableExpression>(name);
+                Token op = equals; // Mevcut token'ı kopyala
+
+                // Sadece tipini değiştir
+                switch(equals.type) {
+                case TokenType::PLUS_EQUAL:
+                    op.type = TokenType::PLUS;
+                    break;
+                case TokenType::MINUS_EQUAL:
+                    op.type = TokenType::MINUS;
+                    break;
+                case TokenType::MULTIPLY_EQUAL:
+                    op.type = TokenType::MULTIPLY;
+                    break;
+                case TokenType::DIVIDE_EQUAL:
+                    op.type = TokenType::DIVIDE;
+                    break;
+                default:
+                    break;
+                }
+
+                value = std::make_unique<BinaryExpression>(op, std::move(left), std::move(value));
+            }
+
             return std::make_unique<AssignExpression>(name, std::move(value));
         }
 
