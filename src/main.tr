@@ -1,5 +1,8 @@
-deg s: metin = "4";
+deg i: sayı;
 
-s -= 8
+i = 1;
 
-yaz s
+döngü i <= 10 {
+    yaz i
+    i += 1
+}

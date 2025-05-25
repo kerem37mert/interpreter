@@ -75,5 +75,8 @@ int main(int argc, char* argv[]) {
 // Todo: Aynı scopeda aynı isimli birden fazla değişken tanımlanamamalı (Tamamlandı)
 // Todo: Sabitlere değer sonradan değer atanmaması sağlanacak (TAMAMLANDI)
 // Todo: Fonksiyon çağrıları uygulanacak (TAMAMLANDI)
-// Todo: Fonksiyon kontrolleri gerçekleştirilecek (tür, argüman)
-// Todo: Dur ve Devam deyimlerinin çalıştırılması sağlanacak
+// Todo: Fonksiyon kontrolleri gerçekleştirilecek (tür, argüman) (TAMAMLANDI)
+// Todo: Dur ve Devam deyimlerinin çalıştırılması sağlanacak (TAMAMLANDI)
+
+// Todo: Lexerdakaçış karakterleri eklenecek
+// Kapsamlı testler gerçekleştirilecek
