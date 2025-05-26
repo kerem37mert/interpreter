@@ -1,8 +1,16 @@
-deg i: sayı;
+fonk fibonacciDizisi: sayı => x: sayı {
+    eğer(x == 1 || x == 2)
+        dön 1
+    yoksa {
+        deg a: sayı = fibonacciDizisi(x-1)
+        deg b: sayı = fibonacciDizisi(x-2)
+        dön a + b
+    }
+}
 
-i = 1;
+deg x: sayı = 1;
 
-döngü i <= 10 {
-    yaz i
-    i += 1
+döngü x < 5 {
+    yaz "Fibonacci(" + x + "): " + fibonacciDizisi(x)
+    x += 1
 }

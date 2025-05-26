@@ -79,4 +79,5 @@ int main(int argc, char* argv[]) {
 // Todo: Dur ve Devam deyimlerinin çalıştırılması sağlanacak (TAMAMLANDI)
 
 // Todo: Lexerdakaçış karakterleri eklenecek
-// Kapsamlı testler gerçekleştirilecek
+// Todo: Kapsamlı testler gerçekleştirilecek
+// Todo: Recursive çağrılarda kendini birden fazla çağırmada program çalışmıyor
