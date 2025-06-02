@@ -1,16 +1,85 @@
-fonk fibonacciDizisi: sayı => x: sayı {
-    eğer(x == 1 || x == 2)
-        dön 1
-    yoksa {
-        deg a: sayı = fibonacciDizisi(x-1)
-        deg b: sayı = fibonacciDizisi(x-2)
-        dön a + b
+fonk selamla: metin => ad: metin {
+    dön "Merhaba " + ad
+}
+
+yaz selamla("Kerem")
+
+fonk topla: sayı => a: sayı, b: sayı {
+    dön a + b
+}
+
+fonk çıkar: sayı => a: sayı, b: sayı {
+    dön a - b
+}
+
+fonk çarp: sayı => a: sayı, b: sayı {
+    dön a * b
+}
+
+fonk böl: sayı => a: sayı, b: sayı {
+    dön a / b
+}
+
+sbt sonuc1: sayı = topla(10, 5)
+yaz "10 + 5 = " + sonuc1  //
+
+sbt sonuc2: sayı = çıkar(10, 5)
+yaz "10 - 5 = " + sonuc2
+
+sbt sonuc3: sayı = çarp(10, 5)
+yaz "10 * 5 = " + sonuc3
+
+sbt sonuc4: sayı = böl(10, 5)
+yaz "10 / 5 = " + sonuc4
+
+// İç içe fonksiyon çağrıları
+fonk kare: sayı => x: sayı {
+    dön x * x
+}
+
+fonk toplamKareler: sayı => a: sayı, b: sayı {
+    dön topla(kare(a), kare(b))
+}
+
+sbt sonuc5: sayı = toplamKareler(3, 4)
+yaz "3² + 4² = " + sonuc5
+
+
+fonk büyükMü: doğruluk => a: sayı, b: sayı {
+    dön a > b
+}
+
+fonk eşitMi: doğruluk => a: sayı, b: sayı {
+    dön a == b
+}
+
+sbt sonuc6: doğruluk = büyükMü(10, 5)
+yaz "10 > 5 = " + sonuc6
+
+sbt sonuc7: doğruluk = eşitMi(5, 5)
+yaz "5 == 5 = " + sonuc7
+
+
+fonk dışFonksiyon: sayı => x: sayı {
+    fonk içFonksiyon: sayı => y: sayı {
+        dön y * 2
     }
+    dön içFonksiyon(x)
+}
+sbt sonuc9: sayı = dışFonksiyon(5)
+yaz "İç içe fonksiyon sonucu = " + sonuc9  // 10 yazdırmalı
+
+
+fonk faktöriyel: sayı => n: sayı {
+    eğer (n <= 1) {
+        dön 1
+    }
+    dön n * faktöriyel(n - 1)
 }
 
-deg x: sayı = 1;
+sbt sonuc10: sayı = faktöriyel(5)
+yaz "5! = " + sonuc10
 
-döngü x < 5 {
-    yaz "Fibonacci(" + x + "): " + fibonacciDizisi(x)
-    x += 1
-}
+deg ss: sayı = 5
+ss += 2
+yaz ss

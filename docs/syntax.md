@@ -15,7 +15,7 @@
     sbt <DEĞİŞKEN_İSMİ>:<veri tipi> = <değer>
 ```
 
-## Dizi tanımlama
+## Dizi tanımlama (Henüz dile eklenmedi)
 ```interpereter (Dil için bir isin oluşturulacak)
     deg <DEĞİŞKEN_İSMİ>:<veri tipi>[] = [<ifade_1>, <ifade_2>, ....]
 ```
@@ -70,4 +70,28 @@ veya geri dönüş değeri olmayan fonksiyon
 ## Yaz Sözdizimi (Bir fonksiyon değildir, dilin yapısında olan bir anahtar kelimedir) UYARI: Standart Kütüphane yazıldıktan sonra kaldırılacak
 ```interpereter (Dil için bir isim oluşturulacak)
     yaz "Merhaba Dünya!"
+```
+
+## Operatörler
+```interpereter (Dil için bir isim oluşturulacak)
+    +  // Toplama işlemi ve metin birleştirme operatörü
+    -  // Çıkarma işlemi operatörü
+    *  // Çarpma işlemi operatörü
+    /  // Bölme işlemi operatörü
+    %  // Mod alma işlemi operatörü
+    ** // Üs alma işlemi operatörü
+    =  // Atama işlemi operatörü
+    += // Toplayarak atama işlemi operatörü
+    -= // Çıkartarak atama işlemi operatörü
+    *= // Çarparak atama işlemi operatörü
+    /= // Bölerek atama işlemi operatörü
+    && // Ve işlemi operatörü
+    || // Veya işlemi operatörü
+    !  // Değil işlemi operatörü
+    >  // Büyüktür kontrol operatörü
+    <  // Küçüktür kontrol operatörü
+    == // Eşitlik kontrol operatörü
+    <= // Küçük eşit kontrol operatörü
+    >= // Büyük eşit kontrol operatörü
+    != // Eşit değil kontrol operatörü   
 ```
