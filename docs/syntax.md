@@ -15,11 +15,6 @@
     sbt <DEĞİŞKEN_İSMİ>:<veri tipi> = <değer>
 ```
 
-## Dizi tanımlama (Henüz dile eklenmedi)
-```interpereter (Dil için bir isin oluşturulacak)
-    deg <DEĞİŞKEN_İSMİ>:<veri tipi>[] = [<ifade_1>, <ifade_2>, ....]
-```
-
 ## Fonksiyon Tanımlama
 ```interpereter (Dil için bir isin oluşturulacak)
     fonk <fonksiyon_ismi>:<dönüş_tipi> => <arg_1>:<veri_tipi>, <arg_2>:<veri_tipi>, ... {
